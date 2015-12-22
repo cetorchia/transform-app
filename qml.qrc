@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>AboutDialog.qml</file>
+        <file>LicenseDialog.qml</file>
+        <file>LICENSE</file>
     </qresource>
 </RCC>
-

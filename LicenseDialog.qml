@@ -16,40 +16,31 @@
  */
 
 import QtQuick 2.3
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.4
+import QtQuick.Dialogs 1.2
 
-ApplicationWindow {
-    visible: true
-    width: 640
-    height: 480
-    title: qsTr("Hello World")
-    menuBar: MenuBar {
-        Menu {
-            title: qsTr("Menu")
-            MenuItem {
-                text: qsTr("About")
-                onTriggered: aboutDialog.open();
+Rectangle {
+    color: "white"
+    z: 1
+    implicitWidth: parent ? parent.width : 400
+    implicitHeight: parent ? parent.height : 200
+    Keys.onEscapePressed: visible = false;
+    Keys.onBackPressed: visible = false;
+    TextArea {
+        id: licenseTextArea
+        width: parent.width
+        height: parent.height
+        readOnly: true
+        text: "Temp"
+        Component.onCompleted: {
+            var request = new XMLHttpRequest();
+            request.open('GET', 'LICENSE');
+            request.onreadystatechange = function(event) {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                    licenseTextArea.text = request.responseText;
+                }
             }
-            MenuItem {
-                text: qsTr("License")
-                onTriggered: licenseDialog.visible = true;
-            }
-            MenuItem {
-                text: qsTr("Exit")
-                onTriggered: Qt.quit();
-            }
+            request.send();
         }
     }
-    AboutDialog {
-        id: aboutDialog
-    }
-    LicenseDialog {
-        id: licenseDialog
-        visible: false
-    }
-    Label {
-        text: qsTr("Hello World!")
-        anchors.centerIn: parent
-    }
 }
-
