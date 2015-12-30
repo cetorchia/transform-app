@@ -15,24 +15,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QtGlobal>
-#include <QtQml/qqml.h>
-#include <QApplication>
-#include <QQmlApplicationEngine>
+import QtQuick 2.3
+import QtQuick.Controls 1.2
+import QtQuick.Layouts 1.0
 
-#include "myobject.h"
-
-int main(int argc, char *argv[])
-{
-    qputenv("QT_QUICK_CONTROLS_STYLE", "Flat");
-
-    QApplication app(argc, argv);
-
-    qmlRegisterType<MyObject>("MyObjects", 1, 0, "MyObject");
-
-    QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-
-    return app.exec();
+ColumnLayout {
+    Button {
+        id: createFeedButton
+        text: "Create Feed"
+        Layout.alignment: Qt.AlignTop | Qt.AlignLeft
+        Layout.fillWidth: true
+        onClicked: {
+            console.log("clicked")
+        }
+    }
 }
-

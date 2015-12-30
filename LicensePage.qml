@@ -17,15 +17,9 @@
 
 import QtQuick 2.3
 import QtQuick.Controls 1.4
-import QtQuick.Dialogs 1.2
 
-Rectangle {
-    color: "white"
-    z: 1
-    implicitWidth: parent ? parent.width : 400
-    implicitHeight: parent ? parent.height : 200
-    Keys.onEscapePressed: visible = false;
-    Keys.onBackPressed: visible = false;
+Item {
+    property string title: "License"
     TextArea {
         id: licenseTextArea
         width: parent.width

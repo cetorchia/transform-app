@@ -1,8 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>AboutDialog.qml</file>
-        <file>LicenseDialog.qml</file>
+        <file>AboutPage.qml</file>
+        <file>LicensePage.qml</file>
         <file>LICENSE</file>
+        <file>MainPage.qml</file>
+        <file>about.js</file>
+        <file>back57.png</file>
     </qresource>
 </RCC>

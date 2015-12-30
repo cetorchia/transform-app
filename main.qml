@@ -17,39 +17,71 @@
 
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtQuick.Layouts 1.0
+
+import "about.js" as About
 
 ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Hello World")
-    menuBar: MenuBar {
-        Menu {
-            title: qsTr("Menu")
-            MenuItem {
-                text: qsTr("About")
-                onTriggered: aboutDialog.open();
+    title: About.workName + " (c) " + About.copyright + " (see License for terms and conditions)"
+    StackView {
+        id: stackView
+        anchors.fill: parent
+        // Implements back key navigation
+        focus: true
+        Keys.onReleased: if (event.key === Qt.Key_Back && stackView.depth > 1) {
+                             stackView.pop();
+                             event.accepted = true;
+                         }
+        initialItem: MainPage {
+        }
+    }
+    function goTo(qmlFile) {
+        stackView.push(Qt.resolvedUrl(qmlFile));
+    }
+    toolBar: ToolBar {
+        RowLayout {
+            Layout.maximumHeight: 32
+            anchors.fill: parent
+            ToolButton {
+                Layout.fillWidth: false
+                onClicked: stackView.pop();
+                Image {
+                    anchors.fill: parent
+                    source: "qrc:/back57.png"
+                    sourceSize.width: 32
+                    sourceSize.height: 32
+                }
             }
-            MenuItem {
-                text: qsTr("License")
-                onTriggered: licenseDialog.visible = true;
+            Label {
+                id: titleLabel
+                text: stackView.currentItem.title ? stackView.currentItem.title : ""
+                Layout.fillWidth: true
             }
-            MenuItem {
-                text: qsTr("Exit")
-                onTriggered: Qt.quit();
+            ToolButton {
+                Layout.alignment: Qt.AlignRight
+                menu: Menu {
+                    title: qsTr("Menu")
+                    MenuItem {
+                        text: qsTr("About")
+                        onTriggered: goTo("AboutPage.qml");
+                    }
+                    MenuItem {
+                        text: qsTr("License")
+                        onTriggered: goTo("LicensePage.qml");
+                    }
+                    MenuItem {
+                        text: qsTr("Source Code")
+                        onTriggered: Qt.openUrlExternally(About.sourceCodeUrl);
+                    }
+                    MenuItem {
+                        text: qsTr("Exit")
+                        onTriggered: Qt.quit();
+                    }
+                }
             }
         }
     }
-    AboutDialog {
-        id: aboutDialog
-    }
-    LicenseDialog {
-        id: licenseDialog
-        visible: false
-    }
-    Label {
-        text: qsTr("Hello World!")
-        anchors.centerIn: parent
-    }
 }
-
