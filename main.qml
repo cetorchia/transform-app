@@ -55,9 +55,14 @@ ApplicationWindow {
                     sourceSize.height: 32
                 }
             }
+            Item {
+                Layout.fillWidth: true
+            }
             Label {
                 id: titleLabel
                 text: stackView.currentItem.title ? stackView.currentItem.title : ""
+            }
+            Item {
                 Layout.fillWidth: true
             }
             ToolButton {
