@@ -39,7 +39,9 @@ ApplicationWindow {
         }
     }
     function goTo(qmlFile) {
-        stackView.push(Qt.resolvedUrl(qmlFile));
+        if (stackView.currentItem.goTo) {
+            stackView.currentItem.goTo(qmlFile)
+        }
     }
     toolBar: ToolBar {
         RowLayout {

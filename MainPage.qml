@@ -19,14 +19,15 @@ import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 
-ColumnLayout {
-    Button {
-        id: createFeedButton
-        text: "Create Feed"
-        Layout.alignment: Qt.AlignTop | Qt.AlignLeft
-        Layout.fillWidth: true
-        onClicked: {
-            console.log("clicked")
+Page {
+    ColumnLayout {
+        anchors.fill: parent
+        Button {
+            id: createFeedButton
+            text: "Create Feed"
+            Layout.alignment: Qt.AlignTop | Qt.AlignLeft
+            Layout.fillWidth: true
+            onClicked: goTo("CreateFeedPage.qml");
         }
     }
 }

@@ -18,8 +18,8 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.4
 
-Item {
-    property string title: "License"
+Page {
+    title: "License"
     TextArea {
         id: licenseTextArea
         width: parent.width

@@ -16,28 +16,15 @@
  */
 
 import QtQuick 2.3
-import QtQuick.Controls 1.4
-import QtQuick.Window 2.0
+import QtQuick.Controls 1.2
+import QtQuick.Layouts 1.0
 
-import "about.js" as About
-
-Page {
-    title: "About"
-    TextArea {
-        id: aboutTextArea
-        width: parent.width
-        height: parent.height
-        readOnly: true
-        text: About.workName + "\n" +
-              "Copyright (c) " + About.copyright + "\n" +
-              "\n" +
-              "Source: <" + About.sourceCodeUrl + ">\n" +
-              "\n" +
-              "This program comes with ABSOLUTELY NO WARRANTY. This is free software, " +
-              "and you are welcome to redistribute it under certain conditions. " +
-              "See License (GNU GPL 3) for details.\n" +
-              "\n" +
-              "Third party libraries:\n" +
-              About.libs.join("\n")
+Item {
+    property string title
+    function goTo(qmlFile) {
+        if (parent.push) {
+            parent.push(Qt.resolvedUrl(qmlFile));
+        }
     }
 }
+
