@@ -22,5 +22,20 @@ import QtQuick.Layouts 1.0
 Page {
     title: "Create Feed"
     ColumnLayout {
+        anchors.fill: parent
+        TextField {
+            Layout.fillWidth: true
+            placeholderText: "Name"
+            validator: RegExpValidator {
+                regExp: /^.+$/
+            }
+        }
+        TextField {
+            Layout.fillWidth: true
+            placeholderText: "URL (optional)"
+        }
+        Item {
+            Layout.fillHeight: true
+        }
     }
 }
