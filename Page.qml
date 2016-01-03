@@ -26,5 +26,11 @@ Item {
             parent.push(Qt.resolvedUrl(qmlFile));
         }
     }
+    function closePage() {
+        parent.pop();
+    }
+    function clearPages() {
+        parent.clear();
+    }
 }
 

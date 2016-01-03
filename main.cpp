@@ -20,7 +20,7 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 
-#include "myobject.h"
+#include "feed.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    qmlRegisterType<MyObject>("MyObjects", 1, 0, "MyObject");
+    qmlRegisterType<Feed>("Feeds", 1, 0, "Feed");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
