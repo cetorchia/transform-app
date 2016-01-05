@@ -15,38 +15,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RECORD_H
-#define RECORD_H
-
-#include <QObject>
 #include <QSqlDatabase>
 
-class Record : public QObject
-{
-    Q_OBJECT
-public:
-    Q_INVOKABLE void save(QString data);
-    Q_INVOKABLE void save(int id, QString data);
-    Q_INVOKABLE QString load(int id);
+#include "database.h"
 
-    virtual const QStringList requiredFields();
-    virtual const QStringList allowedFields();
-    virtual bool validate(QString data);
-
-    virtual const QString tableName();
-    virtual const QString createStatement();
-    virtual const QString insertStatement();
-
-protected:
-    explicit Record(QObject *parent = 0);
-
-signals:
-    void saved();
-    void error(QString message);
-
-public slots:
-
-private:
-};
-
-#endif // RECORD_H
+QSqlDatabase Database::db() {
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("transform");
+    return db;
+}

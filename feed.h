@@ -30,6 +30,8 @@ public:
     virtual const QStringList requiredFields();
     virtual bool validate(QString data);
 
+    virtual const QString tableName();
+
 signals:
 
 public slots:

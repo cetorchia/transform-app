@@ -5,7 +5,8 @@ QT += qml quick widgets sql
 SOURCES += main.cpp \
     myobject.cpp \
     feed.cpp \
-    record.cpp
+    record.cpp \
+    database.cpp
 
 RESOURCES += qml.qrc
 
@@ -20,5 +21,6 @@ DISTFILES +=
 HEADERS += \
     myobject.h \
     feed.h \
-    record.h
+    record.h \
+    database.h
 

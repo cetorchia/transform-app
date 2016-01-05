@@ -27,6 +27,10 @@ Feed::Feed(QObject *parent) : Record(parent)
 
 }
 
+const QString Feed::tableName() {
+    return "feed";
+}
+
 const QStringList Feed::allowedFields() {
     QStringList allowedFields = QStringList();
     allowedFields << "name"
@@ -56,19 +60,19 @@ bool Feed::validate(QString data) {
         QString xmlPathex = obj["xmlPathex"].toString();
         QString jsonPathex = obj["jsonPathex"].toString();
         if (name.isEmpty()) {
-            emit error(QString("Name is required."));
+            emit error("Name is required.");
             return false;
         } else if (type == "REGEX" && regex.isEmpty()) {
-            emit error(QString("Regular expression is required."));
+            emit error("Regular expression is required.");
             return false;
         } else if (type == "REGEX" && regexFields.isEmpty()) {
-            emit error(QString("Fields are required."));
+            emit error("Fields are required.");
             return false;
         } else if (type == "XML_PATHEX" && xmlPathex.isEmpty()) {
-            emit error(QString("Path expression is required."));
+            emit error("Path expression is required.");
             return false;
         } else if (type == "JSON_PATHEX" && jsonPathex.isEmpty()) {
-            emit error(QString("Path expression is required."));
+            emit error("Path expression is required.");
             return false;
         } else {
             return true;

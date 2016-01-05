@@ -15,10 +15,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QVariant>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
 
+#include "database.h"
 #include "record.h"
 
 Record::Record(QObject *parent) : QObject(parent)
@@ -26,11 +31,23 @@ Record::Record(QObject *parent) : QObject(parent)
 
 }
 
-const QStringList Record::requiredFields() {
-    return QStringList();
+const QString Record::tableName() {
+    return "";
+}
+
+const QString Record::createStatement() {
+    return "CREATE TABLE IF NOT EXISTS " + this->tableName() + " (id INTEGER PRIMARY KEY, data)";
+}
+
+const QString Record::insertStatement() {
+    return "INSERT INTO " + this->tableName() + "(data) VALUES (:data)";
 }
 
 const QStringList Record::allowedFields() {
+    return QStringList();
+}
+
+const QStringList Record::requiredFields() {
     return QStringList();
 }
 
@@ -43,14 +60,14 @@ bool Record::validate(QString data) {
     for (int i = 0; i < existingFields.size(); i++) {
         QString field = existingFields.at(i);
         if (!allowedFields.contains(field)) {
-            emit error(QString("Unallowed field \"" + field + "\""));
+            emit error("Unallowed field \"" + field + "\"");
             return false;
         }
     }
     for (int i = 0; i < requiredFields.size(); i++) {
         QString field = requiredFields.at(i);
         if (!existingFields.contains(field)) {
-            emit error(QString("Required field \"" + field + "\""));
+            emit error("Required field \"" + field + "\"");
             return false;
         }
     }
@@ -59,6 +76,26 @@ bool Record::validate(QString data) {
 
 void Record::save(QString data) {
     if (this->validate(data)){
+        QSqlDatabase db = Database::db();
+        if (!db.open()) {
+            emit error("Cannot open database");
+            return;
+        }
+        QSqlQuery create(db);
+        create.prepare(this->createStatement());
+        if (!create.exec()) {
+            QSqlError sqlError = create.lastError();
+            emit error(sqlError.text());
+            return;
+        }
+        QSqlQuery insert(db);
+        insert.prepare(this->insertStatement());
+        insert.bindValue(":data", QVariant(data));
+        if (!insert.exec()) {
+            QSqlError sqlError = insert.lastError();
+            emit error(sqlError.text());
+            return;
+        }
         emit saved();
     }
 }
@@ -72,4 +109,3 @@ void Record::save(int id, QString data) {
 QString Record::load(int id) {
     return NULL;
 }
-
