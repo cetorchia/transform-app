@@ -9,5 +9,6 @@
         <file>back57.png</file>
         <file>CreateFeedPage.qml</file>
         <file>Page.qml</file>
+        <file>PageView.qml</file>
     </qresource>
 </RCC>

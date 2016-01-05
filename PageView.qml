@@ -19,28 +19,32 @@ import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 
-Item {
-    property string title
-    function goTo(qmlFile, parameters) {
-        if (parent.goTo) {
-            parent.goTo(qmlFile, parameters);
+StackView {
+    property var params
+    anchors.fill: parent
+    // Implements back key navigation
+    focus: true
+    Keys.onReleased: if (event.key === Qt.Key_Back && depth > 1) {
+                         pop();
+                         event.accepted = true;
+                     }
+    function goTo(qmlFile, newParams) {
+        push(Qt.resolvedUrl(qmlFile));
+        if (newParams) {
+            params = newParams;
+        } else {
+            params = {};
         }
     }
     function closePage() {
-        if (parent.closePage) {
-            parent.closePage();
-        }
+        pop();
+        params = {};
     }
     function clearPages() {
-        if (parent.clearPages) {
-            parent.clearPages();
-        }
+        clear();
+        params = {};
     }
     function parameters() {
-        if (parent.parameters) {
-            return parent.parameters();
-        } else {
-            return {};
-        }
+        return params;
     }
 }

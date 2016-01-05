@@ -26,21 +26,14 @@ ApplicationWindow {
     width: 640
     height: 480
     title: About.workName + " (c) " + About.copyright + " (see License for terms and conditions)"
-    StackView {
-        id: stackView
-        anchors.fill: parent
-        // Implements back key navigation
-        focus: true
-        Keys.onReleased: if (event.key === Qt.Key_Back && stackView.depth > 1) {
-                             stackView.pop();
-                             event.accepted = true;
-                         }
+    PageView {
+        id: pageView
         initialItem: MainPage {
         }
     }
     function goTo(qmlFile) {
-        if (stackView.currentItem.goTo) {
-            stackView.currentItem.goTo(qmlFile)
+        if (pageView.currentItem.goTo) {
+            pageView.currentItem.goTo(qmlFile)
         }
     }
     toolBar: ToolBar {
@@ -49,7 +42,7 @@ ApplicationWindow {
             anchors.fill: parent
             ToolButton {
                 Layout.fillWidth: false
-                onClicked: stackView.pop();
+                onClicked: pageView.pop();
                 Image {
                     anchors.fill: parent
                     source: "qrc:/back57.png"
@@ -62,8 +55,8 @@ ApplicationWindow {
             }
             Label {
                 id: titleLabel
-                text: if (stackView.currentItem && stackView.currentItem.title) {
-                          stackView.currentItem.title
+                text: if (pageView.currentItem && pageView.currentItem.title) {
+                          pageView.currentItem.title
                       } else {
                           ""
                       }

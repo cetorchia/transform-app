@@ -152,9 +152,12 @@ Page {
                     var params = parameters();
                     if (params.id) {
                         feedData.id = params.id;
+                        console.log("Saving " + JSON.stringify(feedData));
+                        feed.save(feedData.id, JSON.stringify(feedData));
+                    } else {
+                        console.log("Saving " + JSON.stringify(feedData));
+                        feed.save(JSON.stringify(feedData));
                     }
-                    console.log(JSON.stringify(feedData));
-                    feed.save(JSON.stringify(feedData));
                 }
             }
         }
