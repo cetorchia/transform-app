@@ -67,7 +67,7 @@ Page {
             Layout.fillWidth: true
             placeholderText: "URL (optional)"
         }
-        RowLayout {
+        ColumnLayout {
             ExclusiveGroup { id: feedTypeGroup }
             RadioButton {
                 id: regexFeedType
@@ -149,6 +149,10 @@ Page {
                         xmlPathex: xmlPathexTextField.text,
                         jsonPathex: jsonPathexTextField.text
                     };
+                    var params = parameters();
+                    if (params.id) {
+                        feedData.id = params.id;
+                    }
                     console.log(JSON.stringify(feedData));
                     feed.save(JSON.stringify(feedData));
                 }

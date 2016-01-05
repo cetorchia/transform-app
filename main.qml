@@ -62,7 +62,11 @@ ApplicationWindow {
             }
             Label {
                 id: titleLabel
-                text: stackView.currentItem.title ? stackView.currentItem.title : ""
+                text: if (stackView.currentItem && stackView.currentItem.title) {
+                          stackView.currentItem.title
+                      } else {
+                          ""
+                      }
             }
             Item {
                 Layout.fillWidth: true
