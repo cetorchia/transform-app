@@ -21,6 +21,11 @@ import QtQuick.Layouts 1.0
 
 StackView {
     property var params
+    property var title: if (currentItem && currentItem.title) {
+                            currentItem.title
+                        } else {
+                            ""
+                        }
     anchors.fill: parent
     // Implements back key navigation
     focus: true

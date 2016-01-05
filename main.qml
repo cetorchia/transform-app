@@ -31,11 +31,6 @@ ApplicationWindow {
         initialItem: MainPage {
         }
     }
-    function goTo(qmlFile) {
-        if (pageView.currentItem.goTo) {
-            pageView.currentItem.goTo(qmlFile)
-        }
-    }
     toolBar: ToolBar {
         RowLayout {
             Layout.maximumHeight: 32
@@ -55,11 +50,7 @@ ApplicationWindow {
             }
             Label {
                 id: titleLabel
-                text: if (pageView.currentItem && pageView.currentItem.title) {
-                          pageView.currentItem.title
-                      } else {
-                          ""
-                      }
+                text: pageView.title
             }
             Item {
                 Layout.fillWidth: true
@@ -70,11 +61,11 @@ ApplicationWindow {
                     title: qsTr("Menu")
                     MenuItem {
                         text: qsTr("About")
-                        onTriggered: goTo("AboutPage.qml");
+                        onTriggered: pageView.goTo("AboutPage.qml");
                     }
                     MenuItem {
                         text: qsTr("License")
-                        onTriggered: goTo("LicensePage.qml");
+                        onTriggered: pageView.goTo("LicensePage.qml");
                     }
                     MenuItem {
                         text: qsTr("Source Code")
