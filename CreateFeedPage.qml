@@ -22,6 +22,7 @@ import QtQuick.Layouts 1.0
 import Feeds 1.0
 
 Page {
+    property int feedId: params.id ? params.id : null
     Feed {
         id: feed
         onSaved: {
@@ -149,9 +150,8 @@ Page {
                         xmlPathex: xmlPathexTextField.text,
                         jsonPathex: jsonPathexTextField.text
                     };
-                    var params = parameters();
-                    if (params.id) {
-                        feedData.id = params.id;
+                    if (feedId) {
+                        feedData.id = feedId;
                         console.log("Saving " + JSON.stringify(feedData));
                         feed.save(feedData.id, JSON.stringify(feedData));
                     } else {

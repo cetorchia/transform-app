@@ -21,6 +21,11 @@ import QtQuick.Layouts 1.0
 
 Item {
     property string title
+    property var params: if (parent.params) {
+                             parent.params
+                         } else {
+                             Object.create(null)
+                         }
     function goTo(qmlFile, parameters) {
         if (parent.goTo) {
             parent.goTo(qmlFile, parameters);
@@ -34,13 +39,6 @@ Item {
     function clearPages() {
         if (parent.clearPages) {
             parent.clearPages();
-        }
-    }
-    function parameters() {
-        if (parent.parameters) {
-            return parent.parameters();
-        } else {
-            return {};
         }
     }
 }

@@ -49,7 +49,4 @@ StackView {
         clear();
         params = {};
     }
-    function parameters() {
-        return params;
-    }
 }
