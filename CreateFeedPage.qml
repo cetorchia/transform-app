@@ -22,7 +22,7 @@ import QtQuick.Layouts 1.0
 import Feeds 1.0
 
 Page {
-    property int feedId: params.id ? params.id : null
+    property var feedId: params.id ? params.id : null
     Feed {
         id: feed
         onSaved: {
