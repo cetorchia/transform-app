@@ -51,119 +51,122 @@ Page {
         standardButtons: StandardButton.Ok
     }
     title: "Create Feed"
-    RegExpValidator {
-        id: requiredValidator
-        regExp: /^.+$/
-    }
-    ColumnLayout {
+    ScrollView {
         anchors.fill: parent
-        TextField {
-            id: nameTextField
-            Layout.fillWidth: true
-            placeholderText: "Name"
-            validator: requiredValidator
-        }
-        TextField {
-            id: urlTextField
-            Layout.fillWidth: true
-            placeholderText: "URL (optional)"
-        }
-        ColumnLayout {
-            ExclusiveGroup { id: feedTypeGroup }
-            RadioButton {
-                id: regexFeedType
-                text: "Regular Expression"
-                checked: true
-                exclusiveGroup: feedTypeGroup
-            }
-            RadioButton {
-                id: xmlPathexFeedType
-                text: "Path expression (XML)"
-                exclusiveGroup: feedTypeGroup
-            }
-            RadioButton {
-                id: jsonPathexFeedType
-                text: "Path expression (JSON)"
-                exclusiveGroup: feedTypeGroup
-            }
-        }
-        TextField {
-            id: keyTextField
-            Layout.fillWidth: true
-            placeholderText: "Key field name (optional)"
-        }
-        ColumnLayout {
-            visible: regexFeedType.checked
-            TextField {
-                id: regexTextField
-                Layout.fillWidth: true
-                placeholderText: "Regular expression"
-            }
-            TextField {
-                id: keyRegexTextField
-                Layout.fillWidth: true
-                placeholderText: "Key regular expression (optional)"
-            }
-            TextField {
-                id: regexFieldsTextField
-                Layout.fillWidth: true
-                placeholderText: "Field names (comma-separated)"
-            }
-        }
-        ColumnLayout {
-            visible: xmlPathexFeedType.checked
-            TextField {
-                id: xmlPathexTextField
-                Layout.fillWidth: true
-                placeholderText: "XML path expression"
-            }
-        }
-        ColumnLayout {
-            visible: jsonPathexFeedType.checked
-            TextField {
-                id: jsonPathexTextField
-                Layout.fillWidth: true
-                placeholderText: "JSON path expression"
-            }
-        }
-        RowLayout {
-            Button {
-                id: submitButton
-                text: "Create"
-                onClicked: {
-                    var feedType;
-                    if (regexFeedType.checked) {
-                        feedType = "REGEX";
-                    } else if (xmlPathexFeedType.checked) {
-                        feedType = "XML_PATHEX";
-                    } else if (jsonPathexFeedType.checked) {
-                        feedType = "JSON_PATHEX";
+        Flickable {
+            anchors.fill: parent
+            contentHeight: stuff.implicitHeight
+            ColumnLayout {
+                id: stuff
+                anchors.fill: parent
+                TextField {
+                    id: nameTextField
+                    Layout.fillWidth: true
+                    placeholderText: "Name"
+                }
+                TextField {
+                    id: urlTextField
+                    Layout.fillWidth: true
+                    placeholderText: "URL (optional)"
+                }
+                ColumnLayout {
+                    ExclusiveGroup { id: feedTypeGroup }
+                    RadioButton {
+                        id: regexFeedType
+                        text: "Regular Expression"
+                        checked: true
+                        exclusiveGroup: feedTypeGroup
                     }
-                    var feedData = {
-                        name: nameTextField.text,
-                        url: urlTextField.text,
-                        type: feedType,
-                        key: keyTextField.text,
-                        regex: regexTextField.text,
-                        keyRegex: keyRegexTextField.text,
-                        regexFields: regexFieldsTextField.text,
-                        xmlPathex: xmlPathexTextField.text,
-                        jsonPathex: jsonPathexTextField.text
-                    };
-                    if (feedId) {
-                        feedData.id = feedId;
-                        console.log("Saving " + JSON.stringify(feedData));
-                        feed.save(feedData.id, JSON.stringify(feedData));
-                    } else {
-                        console.log("Saving " + JSON.stringify(feedData));
-                        feed.save(JSON.stringify(feedData));
+                    RadioButton {
+                        id: xmlPathexFeedType
+                        text: "Path expression (XML)"
+                        exclusiveGroup: feedTypeGroup
+                    }
+                    RadioButton {
+                        id: jsonPathexFeedType
+                        text: "Path expression (JSON)"
+                        exclusiveGroup: feedTypeGroup
                     }
                 }
+                TextField {
+                    id: keyTextField
+                    Layout.fillWidth: true
+                    placeholderText: "Key field name (optional)"
+                }
+                ColumnLayout {
+                    visible: regexFeedType.checked
+                    TextField {
+                        id: regexTextField
+                        Layout.fillWidth: true
+                        placeholderText: "Regular expression"
+                    }
+                    TextField {
+                        id: keyRegexTextField
+                        Layout.fillWidth: true
+                        placeholderText: "Key regular expression (optional)"
+                    }
+                    TextField {
+                        id: regexFieldsTextField
+                        Layout.fillWidth: true
+                        placeholderText: "Field names (comma-separated)"
+                    }
+                }
+                ColumnLayout {
+                    visible: xmlPathexFeedType.checked
+                    TextField {
+                        id: xmlPathexTextField
+                        Layout.fillWidth: true
+                        placeholderText: "XML path expression"
+                    }
+                }
+                ColumnLayout {
+                    visible: jsonPathexFeedType.checked
+                    TextField {
+                        id: jsonPathexTextField
+                        Layout.fillWidth: true
+                        placeholderText: "JSON path expression"
+                    }
+                }
+                RowLayout {
+                    Button {
+                        id: submitButton
+                        text: "Create"
+                        onClicked: {
+                            var feedType;
+                            if (regexFeedType.checked) {
+                                feedType = "REGEX";
+                            } else if (xmlPathexFeedType.checked) {
+                                feedType = "XML_PATHEX";
+                            } else if (jsonPathexFeedType.checked) {
+                                feedType = "JSON_PATHEX";
+                            }
+                            var feedData = {
+                                name: nameTextField.text,
+                                url: urlTextField.text,
+                                type: feedType,
+                                key: keyTextField.text,
+                                regex: regexTextField.text,
+                                keyRegex: keyRegexTextField.text,
+                                regexFields: regexFieldsTextField.text,
+                                xmlPathex: xmlPathexTextField.text,
+                                jsonPathex: jsonPathexTextField.text
+                            };
+                            if (feedId) {
+                                feedData.id = feedId;
+                                console.log("Saving " + JSON.stringify(feedData));
+                                feed.save(feedData.id, JSON.stringify(feedData));
+                            } else {
+                                console.log("Saving " + JSON.stringify(feedData));
+                                feed.save(JSON.stringify(feedData));
+                            }
+                        }
+                    }
+                }
+                Item {
+                    id: keepMeAtTheBottomToPreserveAlignment
+                    Layout.fillHeight: true
+                }
             }
-        }
-        Item {
-            id: keepMeAtTheBottomToPreserveAlignment
-            Layout.fillHeight: true
         }
     }
 }
