@@ -19,22 +19,26 @@ import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 
-Rectangle {
-    id: rect
-    property string normalColour: "#f8f8f8"
-    property string hoverColour: "lightsteelblue"
-    property string pressedColour: "steelblue"
+Item {
+    id: self
     property var onClicked: function() {}
-    height: 64
+    height: 128
     width: parent.width
-    color: normalColour
-    border.color: "#e0e0e0"
-    radius: 3
+    Rectangle {
+        id: rect
+        anchors.fill: parent
+        property string normalColour: "#f8f8f8"
+        property string hoverColour: "lightsteelblue"
+        property string pressedColour: "steelblue"
+        color: normalColour
+        border.color: "#e0e0e0"
+        radius: 3
+    }
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
         onClicked: {
-            rect.onClicked();
+            self.onClicked();
         }
         onEntered: {
             rect.color = rect.hoverColour;

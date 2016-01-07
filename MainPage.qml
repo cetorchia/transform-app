@@ -77,14 +77,13 @@ Page {
                 spacing: 2
                 delegate: ListViewItem {
                     ColumnLayout {
+                        anchors.fill: parent
                         Label {
-                            Layout.topMargin: 10
                             Layout.leftMargin: 10
                             text: name
                             font.bold: true
                         }
                         Label {
-                            Layout.topMargin: 3
                             Layout.leftMargin: 10
                             text: feedType
                             font.italic: true
