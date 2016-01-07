@@ -20,6 +20,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 
 StackView {
+    id: stackView
     property var params
     property var title: if (currentItem && currentItem.title) {
                             currentItem.title
@@ -34,19 +35,19 @@ StackView {
                          event.accepted = true;
                      }
     function goTo(qmlFile, newParams) {
-        push(Qt.resolvedUrl(qmlFile));
         if (newParams) {
-            params = newParams;
+            stackView.params = newParams;
         } else {
-            params = {};
+            stackView.params = {};
         }
+        push(Qt.resolvedUrl(qmlFile));
     }
     function closePage() {
         pop();
-        params = {};
+        stackView.params = {};
     }
     function clearPages() {
         clear();
-        params = {};
+        stackView.params = {};
     }
 }

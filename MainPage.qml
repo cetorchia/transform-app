@@ -18,8 +18,37 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
+import QtQuick.Dialogs 1.2
+import Feeds 1.0
 
 Page {
+    title: "Feeds"
+    FeedStore {
+        id: feedStore
+        onError: {
+            // TODO: toast message nicely
+            errorMessageDialog.text = message;
+            errorMessageDialog.open();
+        }
+    }
+    MessageDialog {
+        id: errorMessageDialog
+        title: "Error"
+        standardButtons: StandardButton.Ok
+    }
+    ListModel {
+        id: feedListModel
+        Component.onCompleted: {
+            var feeds = feedStore.get();
+            feeds.forEach(function(feedData) {
+                var element = {
+                    feedId: feedData.id,
+                    name: feedData.data.name
+                };
+                feedListModel.append(element);
+            });
+        }
+    }
     ColumnLayout {
         anchors.fill: parent
         Button {
@@ -28,6 +57,28 @@ Page {
             Layout.alignment: Qt.AlignTop | Qt.AlignLeft
             Layout.fillWidth: true
             onClicked: goTo("CreateFeedPage.qml");
+        }
+        ScrollView {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            ListView {
+                anchors.fill: parent
+                model: feedListModel
+                focus: true
+                spacing: 2
+                delegate: ListViewItem {
+                    ColumnLayout {
+                        Label {
+                            Layout.topMargin: 10
+                            Layout.leftMargin: 10
+                            text: name
+                        }
+                    }
+                    onClicked: function() {
+                        goTo("CreateFeedPage.qml", {id: feedId});
+                    }
+                }
+            }
         }
     }
 }

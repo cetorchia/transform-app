@@ -15,38 +15,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RECORD_H
-#define RECORD_H
+#ifndef FEEDSTORE_H
+#define FEEDSTORE_H
 
 #include <QObject>
-#include <QSqlDatabase>
 
-class Record : public QObject
+#include "datastore.h"
+
+class FeedStore : public DataStore
 {
-    Q_OBJECT
 public:
-    Q_INVOKABLE void save(QString data);
-    Q_INVOKABLE void save(int id, QString data);
-    Q_INVOKABLE QString load(int id);
-
-    virtual const QStringList requiredFields();
+    explicit FeedStore(QObject *parent = 0);
     virtual const QStringList allowedFields();
-    virtual bool validate(QString data);
+    virtual const QStringList requiredFields();
+    virtual bool validate(QVariantMap data);
 
     virtual const QString tableName();
-    virtual const QString createStatement();
-    virtual const QString insertStatement();
-
-protected:
-    explicit Record(QObject *parent = 0);
 
 signals:
-    void saved();
-    void error(QString message);
 
 public slots:
 
 private:
 };
 
-#endif // RECORD_H
+#endif // FEEDSTORE_H

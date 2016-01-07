@@ -23,8 +23,8 @@ import Feeds 1.0
 
 Page {
     property var feedId: params.id ? params.id : null
-    Feed {
-        id: feed
+    FeedStore {
+        id: feedStore
         onSaved: {
             // TODO: toast message nicely
             successMessageDialog.open();
@@ -50,7 +50,7 @@ Page {
         title: "Error"
         standardButtons: StandardButton.Ok
     }
-    title: "Create Feed"
+    title: feedId ? "Update Feed" : "Create Feed"
     ScrollView {
         anchors.fill: parent
         Flickable {
@@ -130,7 +130,7 @@ Page {
                 RowLayout {
                     Button {
                         id: submitButton
-                        text: "Create"
+                        text: feedId ? "Update" : "Create"
                         onClicked: {
                             var feedType;
                             if (regexFeedType.checked) {
@@ -152,12 +152,9 @@ Page {
                                 jsonPathex: jsonPathexTextField.text
                             };
                             if (feedId) {
-                                feedData.id = feedId;
-                                console.log("Saving " + JSON.stringify(feedData));
-                                feed.save(feedData.id, JSON.stringify(feedData));
+                                feedStore.save(feedId, feedData);
                             } else {
-                                console.log("Saving " + JSON.stringify(feedData));
-                                feed.save(JSON.stringify(feedData));
+                                feedStore.save(feedData);
                             }
                         }
                     }
@@ -166,6 +163,29 @@ Page {
                     id: keepMeAtTheBottomToPreserveAlignment
                     Layout.fillHeight: true
                 }
+            }
+        }
+    }
+    Component.onCompleted: {
+        if (feedId) {
+            var response = feedStore.get(feedId);
+            if (Object.keys(response).length > 0) {
+                var feedData = response.data;
+                nameTextField.text = feedData.name;
+                urlTextField.text = feedData.url;
+                if (feedData.type == "REGEX") {
+                    regexFeedType.checked = true;
+                } else if (feedData.type == "XML_PATHEX") {
+                    xmlPathexFeedType.checked = true;
+                } else if (feedData.type == "JSON_PATHEX") {
+                    jsonPathexFeedType.checked = true;
+                }
+                keyTextField.text = feedData.key;
+                regexTextField.text = feedData.regex;
+                keyRegexTextField.text = feedData.keyRegex;
+                regexFieldsTextField.text = feedData.regexFields;
+                xmlPathexTextField.text = feedData.xmlPathex;
+                jsonPathexTextField.text = feedData.jsonPathex;
             }
         }
     }

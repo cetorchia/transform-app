@@ -10,5 +10,6 @@
         <file>CreateFeedPage.qml</file>
         <file>Page.qml</file>
         <file>PageView.qml</file>
+        <file>ListViewItem.qml</file>
     </qresource>
 </RCC>

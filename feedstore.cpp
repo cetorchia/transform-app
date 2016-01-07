@@ -15,23 +15,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QVariant>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
 
-#include "record.h"
-#include "feed.h"
+#include "datastore.h"
+#include "feedstore.h"
 
-Feed::Feed(QObject *parent) : Record(parent)
+FeedStore::FeedStore(QObject *parent) : DataStore(parent)
 {
 
 }
 
-const QString Feed::tableName() {
+const QString FeedStore::tableName() {
     return "feed";
 }
 
-const QStringList Feed::allowedFields() {
+const QStringList FeedStore::allowedFields() {
     QStringList allowedFields = QStringList();
     allowedFields << "name"
                   << "type"
@@ -45,20 +46,18 @@ const QStringList Feed::allowedFields() {
     return allowedFields;
 }
 
-const QStringList Feed::requiredFields() {
+const QStringList FeedStore::requiredFields() {
     return QStringList();
 }
 
-bool Feed::validate(QString data) {
-    if (Record::validate(data)) {
-        QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
-        QJsonObject obj = doc.object();
-        QString name = obj["name"].toString();
-        QString type = obj["type"].toString();
-        QString regex = obj["regex"].toString();
-        QString regexFields = obj["regexFields"].toString();
-        QString xmlPathex = obj["xmlPathex"].toString();
-        QString jsonPathex = obj["jsonPathex"].toString();
+bool FeedStore::validate(QVariantMap data) {
+    if (DataStore::validate(data)) {
+        QString name = data["name"].toString();
+        QString type = data["type"].toString();
+        QString regex = data["regex"].toString();
+        QString regexFields = data["regexFields"].toString();
+        QString xmlPathex = data["xmlPathex"].toString();
+        QString jsonPathex = data["jsonPathex"].toString();
         if (name.isEmpty()) {
             emit error("Name is required.");
             return false;

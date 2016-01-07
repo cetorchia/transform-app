@@ -20,7 +20,7 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 
-#include "feed.h"
+#include "feedstore.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    qmlRegisterType<Feed>("Feeds", 1, 0, "Feed");
+    qmlRegisterType<FeedStore>("Feeds", 1, 0, "FeedStore");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

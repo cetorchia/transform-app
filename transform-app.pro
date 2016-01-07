@@ -3,10 +3,9 @@ TEMPLATE = app
 QT += qml quick widgets sql
 
 SOURCES += main.cpp \
-    myobject.cpp \
-    feed.cpp \
-    record.cpp \
-    database.cpp
+    database.cpp \
+    datastore.cpp \
+    feedstore.cpp
 
 RESOURCES += qml.qrc
 
@@ -19,8 +18,7 @@ include(deployment.pri)
 DISTFILES +=
 
 HEADERS += \
-    myobject.h \
-    feed.h \
-    record.h \
-    database.h
+    database.h \
+    datastore.h \
+    feedstore.h
 
