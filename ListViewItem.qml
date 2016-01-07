@@ -25,7 +25,7 @@ Rectangle {
     property string hoverColour: "lightsteelblue"
     property string pressedColour: "steelblue"
     property var onClicked: function() {}
-    height: 48
+    height: 64
     width: parent.width
     color: normalColour
     border.color: "#e0e0e0"

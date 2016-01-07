@@ -41,9 +41,18 @@ Page {
         Component.onCompleted: {
             var feeds = feedStore.get();
             feeds.forEach(function(feedData) {
+                var feedType;
+                if (feedData.data.type == "REGEX") {
+                    feedType = "Regular expression";
+                } else if (feedData.data.type == "XML_PATHEX") {
+                    feedType = "Path expression (XML)";
+                } else if (feedData.data.type == "JSON_PATHEX") {
+                    feedType = "Path expression (JSON)";
+                }
                 var element = {
                     feedId: feedData.id,
-                    name: feedData.data.name
+                    name: feedData.data.name,
+                    feedType: feedType
                 };
                 feedListModel.append(element);
             });
@@ -72,6 +81,13 @@ Page {
                             Layout.topMargin: 10
                             Layout.leftMargin: 10
                             text: name
+                            font.bold: true
+                        }
+                        Label {
+                            Layout.topMargin: 3
+                            Layout.leftMargin: 10
+                            text: feedType
+                            font.italic: true
                         }
                     }
                     onClicked: function() {
