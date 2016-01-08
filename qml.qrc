@@ -13,5 +13,6 @@
         <file>ListViewItem.qml</file>
         <file>settings49.png</file>
         <file>ListViewItemButton.qml</file>
+        <file>close47.png</file>
     </qresource>
 </RCC>

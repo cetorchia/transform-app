@@ -30,6 +30,7 @@ public:
     Q_INVOKABLE void save(int id, QVariantMap data);
     Q_INVOKABLE QVariantMap get(int id);
     Q_INVOKABLE QVariantList get();
+    Q_INVOKABLE void remove(int id);
 
     virtual const QStringList requiredFields();
     virtual const QStringList allowedFields();
@@ -41,12 +42,14 @@ public:
     virtual const QString updateStatement();
     virtual const QString selectStatement();
     virtual const QString selectStatementById();
+    virtual const QString deleteStatementById();
 
 protected:
     explicit DataStore(QObject *parent = 0);
 
 signals:
     void saved();
+    void deleted();
     void error(QString message);
 
 public slots:

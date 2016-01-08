@@ -55,6 +55,10 @@ const QString DataStore::selectStatementById() {
     return "SELECT id, data FROM " + this->tableName() + " WHERE id = :id";
 }
 
+const QString DataStore::deleteStatementById() {
+    return "DELETE FROM " + this->tableName() + " WHERE id = :id";
+}
+
 const QStringList DataStore::allowedFields() {
     return QStringList();
 }
@@ -203,4 +207,28 @@ QVariantList DataStore::get() {
         objects.append(object);
     }
     return objects;
+}
+
+void DataStore::remove(int id) {
+    QSqlDatabase db = Database::db();
+    if (!db.open()) {
+        emit error("Cannot open database");
+        return;
+    }
+    QSqlQuery create(db);
+    create.prepare(this->createStatement());
+    if (!create.exec()) {
+        QSqlError sqlError = create.lastError();
+        emit error(sqlError.text());
+        return;
+    }
+    QSqlQuery query(db);
+    query.prepare(this->deleteStatementById());
+    query.bindValue(":id", id);
+    if (!query.exec()) {
+        QSqlError sqlError = query.lastError();
+        emit error(sqlError.text());
+        return;
+    }
+    emit deleted();
 }
