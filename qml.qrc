@@ -11,5 +11,7 @@
         <file>Page.qml</file>
         <file>PageView.qml</file>
         <file>ListViewItem.qml</file>
+        <file>settings49.png</file>
+        <file>ListViewItemButton.qml</file>
     </qresource>
 </RCC>

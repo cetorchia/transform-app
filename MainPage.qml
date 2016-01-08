@@ -76,21 +76,40 @@ Page {
                 focus: true
                 spacing: 2
                 delegate: ListViewItem {
-                    ColumnLayout {
+                    RowLayout {
                         anchors.fill: parent
-                        Label {
-                            Layout.leftMargin: 10
-                            text: name
-                            font.bold: true
+                        ColumnLayout {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: false
+                            Label {
+                                Layout.leftMargin: 10
+                                text: name
+                                font.bold: true
+                            }
+                            Label {
+                                Layout.leftMargin: 10
+                                text: feedType
+                                font.italic: true
+                            }
                         }
-                        Label {
-                            Layout.leftMargin: 10
-                            text: feedType
-                            font.italic: true
+                        Item { Layout.fillWidth: true }
+                        ListViewItemButton {
+                            Layout.fillWidth: false
+                            onClicked: function() {
+                                goTo("CreateFeedPage.qml", {id: feedId});
+                            }
+                            Image {
+                                anchors.fill: parent
+                                source: "qrc:/settings49.png"
+                                sourceSize.width: 32
+                                sourceSize.height: 32
+                            }
                         }
                     }
                     onClicked: function() {
-                        goTo("CreateFeedPage.qml", {id: feedId});
+                         // TODO: Go to view feed page where they can view details
+                         // of the feed, as well as view its output.
+                         goTo("CreateFeedPage.qml", {id: feedId});
                     }
                 }
             }
