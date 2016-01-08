@@ -142,9 +142,7 @@ Page {
                         }
                     }
                     onClicked: function() {
-                         // TODO: Go to view feed page where they can view details
-                         // of the feed, as well as view its output.
-                         goTo("CreateFeedPage.qml", {id: feedId});
+                         goTo("FeedPage.qml", {id: feedId});
                     }
                 }
             }

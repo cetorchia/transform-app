@@ -14,5 +14,6 @@
         <file>settings49.png</file>
         <file>ListViewItemButton.qml</file>
         <file>close47.png</file>
+        <file>FeedPage.qml</file>
     </qresource>
 </RCC>
