@@ -26,9 +26,10 @@ class FeedStore : public DataStore
 {
 public:
     explicit FeedStore(QObject *parent = 0);
+
     virtual const QStringList allowedFields();
     virtual const QStringList requiredFields();
-    virtual bool validate(QVariantMap data);
+    virtual bool validate(const QVariantMap& data);
 
     virtual const QString tableName();
 

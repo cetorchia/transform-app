@@ -67,7 +67,7 @@ const QStringList DataStore::requiredFields() {
     return QStringList();
 }
 
-bool DataStore::validate(QVariantMap data) {
+bool DataStore::validate(const QVariantMap& data) {
     QStringList existingFields = data.keys();
     QStringList allowedFields = this->allowedFields();
     QStringList requiredFields = this->requiredFields();
@@ -88,7 +88,7 @@ bool DataStore::validate(QVariantMap data) {
     return true;
 }
 
-void DataStore::save(QVariantMap data) {
+void DataStore::save(const QVariantMap& data) {
     if (this->validate(data)){
         QSqlDatabase db = Database::db();
         if (!db.open()) {
@@ -115,7 +115,7 @@ void DataStore::save(QVariantMap data) {
     }
 }
 
-void DataStore::save(int id, QVariantMap data) {
+void DataStore::save(int id, const QVariantMap& data) {
     if (this->validate(data)){
         QSqlDatabase db = Database::db();
         if (!db.open()) {

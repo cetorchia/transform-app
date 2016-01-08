@@ -26,15 +26,15 @@ class DataStore : public QObject
 {
     Q_OBJECT
 public:
-    Q_INVOKABLE void save(QVariantMap data);
-    Q_INVOKABLE void save(int id, QVariantMap data);
+    Q_INVOKABLE void save(const QVariantMap& data);
+    Q_INVOKABLE void save(int id, const QVariantMap& data);
     Q_INVOKABLE QVariantMap get(int id);
     Q_INVOKABLE QVariantList get();
     Q_INVOKABLE void remove(int id);
 
     virtual const QStringList requiredFields();
     virtual const QStringList allowedFields();
-    virtual bool validate(QVariantMap data);
+    virtual bool validate(const QVariantMap& data);
 
     virtual const QString tableName();
     virtual const QString createStatement();
@@ -50,7 +50,7 @@ protected:
 signals:
     void saved();
     void deleted();
-    void error(QString message);
+    void error(const QString& message);
 
 public slots:
 

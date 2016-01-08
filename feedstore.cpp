@@ -50,7 +50,7 @@ const QStringList FeedStore::requiredFields() {
     return QStringList();
 }
 
-bool FeedStore::validate(QVariantMap data) {
+bool FeedStore::validate(const QVariantMap& data) {
     if (DataStore::validate(data)) {
         QString name = data["name"].toString();
         QString type = data["type"].toString();
