@@ -24,6 +24,7 @@ import Feeds 1.0
 Page {
     property var feedId
     property var feedData: ({})
+    property var transformedData
     title: "Feed"
     FeedStore {
         id: feedStore
@@ -47,8 +48,34 @@ Page {
             if (Object.keys(response).length > 0) {
                 feedId = response.id;
                 feedData = response.data;
+                if (feedData.url) {
+                    doTransform();
+                }
             }
         }
+    }
+    function doTransform() {
+        transformedData = [
+                    {
+                        "field1": "value1",
+                        "field2": "value2"
+                    }
+                ];
+        if (transformedData.length > 0) {
+            Object.keys(transformedData[0]).forEach(function(field) {
+                var tableViewColumn = tableViewColumnComponent.createObject(tableView, {
+                                                                                role: field,
+                                                                                title: field
+                                                                            });
+                tableView.addColumn(tableViewColumn)
+            });
+            transformedData.forEach(function(object) {
+                transformedDataListModel.append(object);
+            });
+        }
+    }
+    ListModel {
+        id: transformedDataListModel
     }
     ScrollView {
         anchors.fill: parent
@@ -168,6 +195,27 @@ Page {
                         Layout.fillWidth: true
                         width: parent.width
                         height: 300
+                    }
+                    RowLayout {
+                        Button {
+                            id: submitButton
+                            text: "Go"
+                            onClicked: {
+                                doTransform();
+                            }
+                        }
+                    }
+                }
+                TableView {
+                    id: tableView
+                    visible: transformedData ? true : false
+                    model: transformedDataListModel
+                    Layout.fillWidth: true
+                    height: 300
+                    Component {
+                        id: tableViewColumnComponent
+                        TableViewColumn {
+                        }
                     }
                 }
                 Item {
