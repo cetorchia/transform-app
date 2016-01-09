@@ -37,6 +37,9 @@ Page {
         id: errorMessageDialog
         title: "Error"
         standardButtons: StandardButton.Ok
+        onAccepted: {
+            closePage();
+        }
     }
     Component.onCompleted: {
         if (params.id) {
@@ -147,6 +150,24 @@ Page {
                             text: feedData.jsonPathex
                             font.family: "monospace"
                         }
+                    }
+                }
+                Label {
+                    text: "Data"
+                    font.bold: true
+                }
+                ColumnLayout {
+                    visible: (!feedData.url)
+                    Layout.fillWidth: true
+                    Label {
+                        text: "Input data to transform:"
+                        font.italic: true
+                    }
+                    TextArea {
+                        id: dataTextArea
+                        Layout.fillWidth: true
+                        width: parent.width
+                        height: 300
                     }
                 }
                 Item {
