@@ -16,13 +16,14 @@
  */
 
 import QtQuick 2.3
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 import Feeds 1.0
 
 Page {
-    property var feedId: params.id
+    property var feedId
+    property var feedData: ({})
     title: "Feed"
     FeedStore {
         id: feedStore
@@ -38,19 +39,11 @@ Page {
         standardButtons: StandardButton.Ok
     }
     Component.onCompleted: {
-        if (feedId) {
-            var response = feedStore.get(feedId);
+        if (params.id) {
+            var response = feedStore.get(params.id);
             if (Object.keys(response).length > 0) {
-                var feedData = response.data;
-                nameLabel.text = feedData.name;
-                urlLabel.text = feedData.url;
-                typeLabel.value = feedData.type;
-                keyLabel.text = feedData.key;
-                regexLabel.text = feedData.regex;
-                keyRegexLabel.text = feedData.keyRegex;
-                regexFieldsLabel.text = feedData.regexFields;
-                xmlPathexLabel.text = feedData.xmlPathex;
-                jsonPathexLabel.text = feedData.jsonPathex;
+                feedId = response.id;
+                feedData = response.data;
             }
         }
     }
@@ -63,12 +56,11 @@ Page {
                 id: stuff
                 anchors.fill: parent
                 Label {
-                    id: nameLabel
+                    text: feedData.name
                     font.bold: true
                 }
                 Label {
-                    id: typeLabel
-                    property string value
+                    property string value: feedData.type
                     text: if (value === "REGEX") {
                               "Regular expression"
                           } else if (value === "XML_PATHEX") {
@@ -84,7 +76,7 @@ Page {
                         font.bold: true
                     }
                     Label {
-                        id: urlLabel
+                        text: feedData.url
                         font.family: "monospace"
                     }
                 }
@@ -94,19 +86,19 @@ Page {
                         font.bold: true
                     }
                     Label {
-                        id: keyLabel
+                        text: feedData.key
                         font.family: "monospace"
                     }
                 }
                 ColumnLayout {
-                    visible: typeLabel.value === "REGEX"
+                    visible: (feedData.type === "REGEX")
                     RowLayout {
                         Label {
                             text: "Regular expression:"
                             font.bold: true
                         }
                         Label {
-                            id: regexLabel
+                            text: feedData.regex
                             font.family: "monospace"
                         }
                     }
@@ -116,7 +108,7 @@ Page {
                             font.bold: true
                         }
                         Label {
-                            id: keyRegexLabel
+                            text: feedData.keyRegex
                             font.family: "monospace"
                         }
                     }
@@ -126,33 +118,33 @@ Page {
                             font.bold: true
                         }
                         Label {
-                            id: regexFieldsLabel
+                            text: feedData.regexFields
                             font.family: "monospace"
                         }
                     }
                 }
                 ColumnLayout {
-                    visible: (typeLabel.value === "XML_PATHEX")
+                    visible: (feedData.type === "XML_PATHEX")
                     RowLayout {
                         Label {
                             text: "XML path expression:"
                             font.bold: true
                         }
                         Label {
-                            id: xmlPathexLabel
+                            text: feedData.xmlPathex
                             font.family: "monospace"
                         }
                     }
                 }
                 ColumnLayout {
-                    visible: (typeLabel.value === "JSON_PATHEX")
+                    visible: (feedData.type === "JSON_PATHEX")
                     RowLayout {
                         Label {
                             text: "JSON path expression:"
                             font.bold: true
                         }
                         Label {
-                            id: jsonPathexLabel
+                            text: feedData.jsonPathex
                             font.family: "monospace"
                         }
                     }
