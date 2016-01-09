@@ -22,7 +22,7 @@ import QtQuick.Layouts 1.0
 import Feeds 1.0
 
 Page {
-    property var feedId: params.id ? params.id : null
+    property var feedId
     FeedStore {
         id: feedStore
         onSaved: {
@@ -49,6 +49,30 @@ Page {
         id: errorMessageDialog
         title: "Error"
         standardButtons: StandardButton.Ok
+    }
+    Component.onCompleted: {
+        if (params.id) {
+            var response = feedStore.get(params.id);
+            if (Object.keys(response).length > 0) {
+                feedId = response.id;
+                var feedData = response.data;
+                nameTextField.text = feedData.name;
+                urlTextField.text = feedData.url;
+                if (feedData.type === "REGEX") {
+                    regexFeedType.checked = true;
+                } else if (feedData.type === "XML_PATHEX") {
+                    xmlPathexFeedType.checked = true;
+                } else if (feedData.type === "JSON_PATHEX") {
+                    jsonPathexFeedType.checked = true;
+                }
+                keyTextField.text = feedData.key;
+                regexTextField.text = feedData.regex;
+                keyRegexTextField.text = feedData.keyRegex;
+                regexFieldsTextField.text = feedData.regexFields;
+                xmlPathexTextField.text = feedData.xmlPathex;
+                jsonPathexTextField.text = feedData.jsonPathex;
+            }
+        }
     }
     title: feedId ? "Update Feed" : "Create Feed"
     ScrollView {
@@ -163,29 +187,6 @@ Page {
                     id: keepMeAtTheBottomToPreserveAlignment
                     Layout.fillHeight: true
                 }
-            }
-        }
-    }
-    Component.onCompleted: {
-        if (feedId) {
-            var response = feedStore.get(feedId);
-            if (Object.keys(response).length > 0) {
-                var feedData = response.data;
-                nameTextField.text = feedData.name;
-                urlTextField.text = feedData.url;
-                if (feedData.type == "REGEX") {
-                    regexFeedType.checked = true;
-                } else if (feedData.type == "XML_PATHEX") {
-                    xmlPathexFeedType.checked = true;
-                } else if (feedData.type == "JSON_PATHEX") {
-                    jsonPathexFeedType.checked = true;
-                }
-                keyTextField.text = feedData.key;
-                regexTextField.text = feedData.regex;
-                keyRegexTextField.text = feedData.keyRegex;
-                regexFieldsTextField.text = feedData.regexFields;
-                xmlPathexTextField.text = feedData.xmlPathex;
-                jsonPathexTextField.text = feedData.jsonPathex;
             }
         }
     }

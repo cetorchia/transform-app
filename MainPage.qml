@@ -44,11 +44,11 @@ Page {
         feedListModel.clear();
         feeds.forEach(function(feedData) {
             var feedType;
-            if (feedData.data.type == "REGEX") {
+            if (feedData.data.type === "REGEX") {
                 feedType = "Regular expression";
-            } else if (feedData.data.type == "XML_PATHEX") {
+            } else if (feedData.data.type === "XML_PATHEX") {
                 feedType = "Path expression (XML)";
-            } else if (feedData.data.type == "JSON_PATHEX") {
+            } else if (feedData.data.type === "JSON_PATHEX") {
                 feedType = "Path expression (JSON)";
             }
             var element = {
