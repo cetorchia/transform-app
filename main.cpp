@@ -21,6 +21,7 @@
 #include <QQmlApplicationEngine>
 
 #include "feedstore.h"
+#include "datatransformer.h"
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     qmlRegisterType<FeedStore>("Feeds", 1, 0, "FeedStore");
+    qmlRegisterType<DataTransformer>("Transformation", 1, 0, "DataTransformer");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

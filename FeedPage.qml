@@ -20,6 +20,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 import Feeds 1.0
+import Transformation 1.0
 
 Page {
     property var feedId
@@ -55,18 +56,19 @@ Page {
         }
     }
     function doTransform() {
-        // TODO: call backend
-        transformedData = [
-                    {
-                        "field1": "value1",
-                        "field2": "value2"
-                    }
-                ];
+        var response;
+        if (dataTextArea.text) {
+            response = dataTransformer.transform(dataTextArea.text);
+        } else {
+            response = dataTransformer.transform();
+        }
+        transformedData = response.data;
+        var fields = response.fields;
         if (transformedData.length > 0) {
             for (var i = tableView.columnCount - 1; i >= 0; i--) {
                 tableView.removeColumn(i);
             }
-            Object.keys(transformedData[0]).forEach(function(field) {
+            fields.forEach(function(field) {
                 var tableViewColumn = tableViewColumnComponent.createObject(tableView, {
                                                                                 role: field,
                                                                                 title: field
@@ -77,6 +79,14 @@ Page {
             transformedData.forEach(function(object) {
                 transformedDataListModel.append(object);
             });
+        }
+    }
+    DataTransformer {
+        id: dataTransformer
+        onError: {
+            // TODO: toast message nicely
+            errorMessageDialog.text = message;
+            errorMessageDialog.open();
         }
     }
     ListModel {

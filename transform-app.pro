@@ -5,7 +5,8 @@ QT += qml quick widgets sql
 SOURCES += main.cpp \
     database.cpp \
     datastore.cpp \
-    feedstore.cpp
+    feedstore.cpp \
+    datatransformer.cpp
 
 RESOURCES += qml.qrc
 
@@ -20,5 +21,6 @@ DISTFILES +=
 HEADERS += \
     database.h \
     datastore.h \
-    feedstore.h
+    feedstore.h \
+    datatransformer.h
 
