@@ -55,6 +55,7 @@ Page {
         }
     }
     function doTransform() {
+        // TODO: call backend
         transformedData = [
                     {
                         "field1": "value1",
@@ -184,7 +185,7 @@ Page {
                     font.bold: true
                 }
                 ColumnLayout {
-                    visible: (!feedData.url)
+                    visible: (feedId && !feedData.url)
                     Layout.fillWidth: true
                     Label {
                         text: "Input data to transform:"
