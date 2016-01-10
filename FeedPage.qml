@@ -25,7 +25,6 @@ import Transformation 1.0
 Page {
     property var feedId
     property var feedData: ({})
-    property var transformedData
     title: "Feed"
     FeedStore {
         id: feedStore
@@ -56,29 +55,10 @@ Page {
         }
     }
     function doTransform() {
-        var response;
-        if (dataTextArea.text) {
-            response = dataTransformer.transform(dataTextArea.text);
+        if (!feedData.url) {
+            dataTransformer.transform(feedData, dataTextArea.text);
         } else {
-            response = dataTransformer.transform();
-        }
-        transformedData = response.data;
-        var fields = response.fields;
-        if (transformedData.length > 0) {
-            for (var i = tableView.columnCount - 1; i >= 0; i--) {
-                tableView.removeColumn(i);
-            }
-            fields.forEach(function(field) {
-                var tableViewColumn = tableViewColumnComponent.createObject(tableView, {
-                                                                                role: field,
-                                                                                title: field
-                                                                            });
-                tableView.addColumn(tableViewColumn);
-            });
-            transformedDataListModel.clear();
-            transformedData.forEach(function(object) {
-                transformedDataListModel.append(object);
-            });
+            dataTransformer.transform(feedData);
         }
     }
     DataTransformer {
@@ -87,6 +67,26 @@ Page {
             // TODO: toast message nicely
             errorMessageDialog.text = message;
             errorMessageDialog.open();
+        }
+        onFinished: {
+            var transformedData = outData;
+            var fields = outFields;
+            if (transformedData.length > 0) {
+                for (var i = tableView.columnCount - 1; i >= 0; i--) {
+                    tableView.removeColumn(i);
+                }
+                fields.forEach(function(field) {
+                    var tableViewColumn = tableViewColumnComponent.createObject(tableView, {
+                                                                                    role: field,
+                                                                                    title: field
+                                                                                });
+                    tableView.addColumn(tableViewColumn);
+                });
+                transformedDataListModel.clear();
+                transformedData.forEach(function(object) {
+                    transformedDataListModel.append(object);
+                });
+            }
         }
     }
     ListModel {
@@ -221,15 +221,18 @@ Page {
                         }
                     }
                 }
-                TableView {
-                    id: tableView
-                    visible: transformedData ? true : false
-                    model: transformedDataListModel
+                Item {
                     Layout.fillWidth: true
                     height: 300
-                    Component {
-                        id: tableViewColumnComponent
-                        TableViewColumn {
+                    TableView {
+                        id: tableView
+                        visible: (transformedDataListModel.count > 0)
+                        model: transformedDataListModel
+                        anchors.fill: parent
+                        Component {
+                            id: tableViewColumnComponent
+                            TableViewColumn {
+                            }
                         }
                     }
                 }

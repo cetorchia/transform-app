@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets sql
+QT += qml quick widgets sql network
 
 SOURCES += main.cpp \
     database.cpp \
@@ -24,3 +24,4 @@ HEADERS += \
     feedstore.h \
     datatransformer.h
 
+CONFIG += c++11
