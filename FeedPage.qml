@@ -63,13 +63,17 @@ Page {
                     }
                 ];
         if (transformedData.length > 0) {
+            for (var i = tableView.columnCount - 1; i >= 0; i--) {
+                tableView.removeColumn(i);
+            }
             Object.keys(transformedData[0]).forEach(function(field) {
                 var tableViewColumn = tableViewColumnComponent.createObject(tableView, {
                                                                                 role: field,
                                                                                 title: field
                                                                             });
-                tableView.addColumn(tableViewColumn)
+                tableView.addColumn(tableViewColumn);
             });
+            transformedDataListModel.clear();
             transformedData.forEach(function(object) {
                 transformedDataListModel.append(object);
             });
