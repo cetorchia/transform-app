@@ -29,6 +29,10 @@ QVariantMap RegexTransformer::transform(const QVariantMap& feedData, const QStri
         }
         outData << datum;
     }
+    QString keyField = feedData["key"].toString();
+    if (outFields.removeOne(keyField)) {
+        outFields.insert(0, keyField);
+    }
     QVariantMap response
     {
         {"fields", outFields},
