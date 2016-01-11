@@ -201,6 +201,12 @@ Page {
                 ColumnLayout {
                     visible: (feedId && !feedData.url)
                     Layout.fillWidth: true
+                    Button {
+                        text: "Paste from clipboard"
+                        onClicked: {
+                            dataTextArea.paste();
+                        }
+                    }
                     Label {
                         text: "Input data to transform:"
                         font.italic: true
