@@ -15,7 +15,8 @@ signals:
 
 public slots:
 private:
-    QStringList fields(const QString& fieldsString);
+    QStringList parseFields(const QString& fieldsString);
+    void matchData(QVariantList& outData, const QRegularExpression& re, const QStringList& fields, const QString& inData);
 };
 
 #endif // REGEXTRANSFORMER_H
