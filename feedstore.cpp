@@ -19,6 +19,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QRegularExpression>
 
 #include "datastore.h"
 #include "feedstore.h"
@@ -55,6 +56,7 @@ bool FeedStore::validate(const QVariantMap& data) {
         QString name = data["name"].toString();
         QString type = data["type"].toString();
         QString regex = data["regex"].toString();
+        QString keyRegex = data["keyRegex"].toString();
         QString regexFields = data["regexFields"].toString();
         QString xmlPathex = data["xmlPathex"].toString();
         QString jsonPathex = data["jsonPathex"].toString();
@@ -63,6 +65,12 @@ bool FeedStore::validate(const QVariantMap& data) {
             return false;
         } else if (type == "REGEX" && regex.isEmpty()) {
             emit error("Regular expression is required.");
+            return false;
+        } else if (type == "REGEX" && !regex.isEmpty() && !QRegularExpression(regex).isValid()) {
+            emit error("Invalid regular expression: " + regex);
+            return false;
+        } else if (type == "REGEX" && !keyRegex.isEmpty() && !QRegularExpression(keyRegex).isValid()) {
+            emit error("Invalid key regular expression: " + keyRegex);
             return false;
         } else if (type == "REGEX" && regexFields.isEmpty()) {
             emit error("Fields are required.");

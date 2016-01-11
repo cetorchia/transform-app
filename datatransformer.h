@@ -23,6 +23,8 @@
 #include <QVariant>
 #include <QNetworkAccessManager>
 
+#include "regextransformer.h"
+
 class DataTransformer : public QObject
 {
     Q_OBJECT
@@ -38,8 +40,10 @@ signals:
 
 public slots:
 private slots:
-private:
+protected:
     QNetworkAccessManager qnam;
+    RegexTransformer regexTransformer;
+private:
     void getFromUrl(const QUrl& url, std::function<void (const QString&)>, int attempts = 0);
 };
 

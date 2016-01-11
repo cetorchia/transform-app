@@ -6,7 +6,8 @@ SOURCES += main.cpp \
     database.cpp \
     datastore.cpp \
     feedstore.cpp \
-    datatransformer.cpp
+    datatransformer.cpp \
+    regextransformer.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,6 +23,7 @@ HEADERS += \
     database.h \
     datastore.h \
     feedstore.h \
-    datatransformer.h
+    datatransformer.h \
+    regextransformer.h
 
 CONFIG += c++11

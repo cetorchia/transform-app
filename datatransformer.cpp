@@ -41,17 +41,12 @@ void DataTransformer::transform(const QVariantMap& feedData)
 
 void DataTransformer::transform(const QVariantMap& feedData, const QString& inData)
 {
-    QStringList fields;
-    QVariantList transformedData;
-    QVariantMap data1;
-    data1["field1"] = "value1";
-    data1["field2"] = "value2";
-    QVariantMap data2;
-    data2["field1"] = "value3";
-    data2["field2"] = inData;
-    fields << "field1" << "field2";
-    transformedData << data1 << data2;
-    finished(fields, transformedData);
+    if (feedData["type"] == "REGEX") {
+        QVariantMap response = regexTransformer.transform(feedData, inData);
+        QStringList fields = response["fields"].toStringList();
+        QVariantList outData = response["data"].toList();
+        emit finished(fields, outData);
+    }
 }
 
 void DataTransformer::getFromUrl(const QUrl& url, std::function<void (const QString&)> finished, int attempts)
