@@ -223,7 +223,7 @@ Page {
                 }
                 Item {
                     Layout.fillWidth: true
-                    height: 300
+                    height: 450
                     TableView {
                         id: tableView
                         visible: (transformedDataListModel.count > 0)
