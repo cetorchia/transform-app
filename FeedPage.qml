@@ -225,13 +225,15 @@ Page {
                         width: parent.width
                         height: 300
                     }
-                    RowLayout {
-                        Button {
-                            id: submitButton
-                            text: "Go"
-                            onClicked: {
-                                doTransform();
-                            }
+                }
+                RowLayout {
+                    visible: (feedId && !feedData.url) || (transformedDataListModel.count > 0)
+                    Layout.fillWidth: true
+                    Button {
+                        id: submitButton
+                        text: (transformedDataListModel.count === 0) ? "Go" : "Reload"
+                        onClicked: {
+                            doTransform();
                         }
                     }
                 }
