@@ -86,11 +86,19 @@ Page {
                 transformedData.forEach(function(object) {
                     transformedDataListModel.append(object);
                 });
+            } else {
+                noResultsMessageDialog.open();
             }
         }
     }
     ListModel {
         id: transformedDataListModel
+    }
+    MessageDialog {
+        id: noResultsMessageDialog
+        title: "No results"
+        standardButtons: StandardButton.Ok
+        text: "Feed pattern(s) do not match any part of the data."
     }
     ScrollView {
         anchors.fill: parent
