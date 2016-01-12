@@ -21,6 +21,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 import Feeds 1.0
 import Transformation 1.0
+import Export 1.0
 
 Page {
     property var feedId
@@ -86,6 +87,7 @@ Page {
                 transformedData.forEach(function(object) {
                     transformedDataListModel.append(object);
                 });
+                csvExporter.data = transformedData;
             } else {
                 noResultsMessageDialog.open();
             }
@@ -99,6 +101,23 @@ Page {
         title: "No results"
         standardButtons: StandardButton.Ok
         text: "Feed pattern(s) do not match any part of the data."
+    }
+    CsvExporter {
+        id: csvExporter
+        filename: feedData.name
+        onFinished: {
+            csvExportMessageDialog.text = "Data written to " + path
+            csvExportMessageDialog.open();
+        }
+        onError: {
+            csvExportMessageDialog.text = message
+            csvExportMessageDialog.open();
+        }
+    }
+    MessageDialog {
+        id: csvExportMessageDialog
+        title: "CSV Export"
+        standardButtons: StandardButton.Ok
     }
     ScrollView {
         anchors.fill: parent
@@ -230,10 +249,17 @@ Page {
                     visible: (feedId && !feedData.url) || (transformedDataListModel.count > 0)
                     Layout.fillWidth: true
                     Button {
-                        id: submitButton
                         text: (transformedDataListModel.count === 0) ? "Go" : "Reload"
                         onClicked: {
                             doTransform();
+                        }
+                    }
+                    Item { Layout.fillWidth: true }
+                    Button {
+                        visible: csvExporter.data.length > 0 ? true : false
+                        text: "Export as CSV"
+                        onClicked: {
+                            csvExporter.exportAsCsv();
                         }
                     }
                 }

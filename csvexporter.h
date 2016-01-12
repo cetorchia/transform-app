@@ -1,5 +1,5 @@
 /* This file is part of the transform app
- * Copyright (c) 2015 Carlos E. Torchia
+ * Copyright (c) 2016 Carlos E. Torchia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,28 +15,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QtGlobal>
-#include <QtQml/qqml.h>
-#include <QApplication>
-#include <QQmlApplicationEngine>
+#ifndef CSVEXPORTER_H
+#define CSVEXPORTER_H
 
-#include "feedstore.h"
-#include "datatransformer.h"
-#include "csvexporter.h"
+#include <QObject>
+#include <QVariant>
 
-int main(int argc, char *argv[])
+class CsvExporter : public QObject
 {
-    qputenv("QT_QUICK_CONTROLS_STYLE", "Flat");
+    Q_OBJECT
+    Q_PROPERTY(QString filename MEMBER m_filename NOTIFY filenameChanged)
+    Q_PROPERTY(QVariantList data MEMBER m_data NOTIFY dataChanged)
+public:
+    explicit CsvExporter(QObject *parent = 0);
 
-    QApplication app(argc, argv);
+    Q_INVOKABLE void exportAsCsv();
 
-    qmlRegisterType<FeedStore>("Feeds", 1, 0, "FeedStore");
-    qmlRegisterType<DataTransformer>("Transformation", 1, 0, "DataTransformer");
-    qmlRegisterType<CsvExporter>("Export", 1, 0, "CsvExporter");
+signals:
+    void filenameChanged();
+    void dataChanged();
+    void finished(const QString& path);
+    void error(const QString& message);
 
-    QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+public slots:
+private:
+    QString m_filename;
+    QVariantList m_data;
+};
 
-    return app.exec();
-}
-
+#endif // CSVEXPORTER_H
