@@ -94,6 +94,7 @@ Page {
                     });
                     transformedDataListModel.append(object);
                 });
+                csvExporter.fields = fields;
                 csvExporter.data = transformedData;
             } else {
                 noResultsMessageDialog.open();

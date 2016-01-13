@@ -25,6 +25,7 @@ class CsvExporter : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString filename MEMBER m_filename NOTIFY filenameChanged)
+    Q_PROPERTY(QStringList fields MEMBER m_fields NOTIFY fieldsChanged)
     Q_PROPERTY(QVariantList data MEMBER m_data NOTIFY dataChanged)
 public:
     explicit CsvExporter(QObject *parent = 0);
@@ -34,13 +35,18 @@ public:
 
 signals:
     void filenameChanged();
+    void fieldsChanged();
     void dataChanged();
     void finished(const QString& path);
     void error(const QString& message);
 
 public slots:
+protected:
+    QString toCsv();
+
 private:
     QString m_filename;
+    QStringList m_fields;
     QVariantList m_data;
 };
 
