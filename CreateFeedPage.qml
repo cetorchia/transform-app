@@ -15,12 +15,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.3
-import QtQuick.Controls 1.2
+import QtQuick 2.5
+import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.1
 import Feeds 1.0
-import QtQuick.Controls.Styles 1.4
 
 Page {
     property var feedId
@@ -134,24 +133,9 @@ Page {
                             Layout.fillWidth: true
                             placeholderText: "Key regular expression (optional)"
                         }
-                        Button {
+                        HelpButton {
                             onClicked: {
                                 goTo("HelpRegexPage.qml");
-                            }
-                            style: ButtonStyle {
-                                background: Rectangle {
-                                    border.color: "#888"
-                                    border.width: control.activeFocus ? 2 : 1
-                                    radius: 4
-                                    gradient: Gradient {
-                                        GradientStop { position: 0 ; color: control.pressed ? "#ccc" : "#eee" }
-                                        GradientStop { position: 1 ; color: control.pressed ? "#aaa" : "#ccc" }
-                                    }
-                                }
-                                label: Label {
-                                    text: " ? "
-                                    font.bold: true
-                                }
                             }
                         }
                     }
@@ -161,24 +145,9 @@ Page {
                             Layout.fillWidth: true
                             placeholderText: "Regular expression"
                         }
-                        Button {
+                        HelpButton {
                             onClicked: {
                                 goTo("HelpRegexPage.qml");
-                            }
-                            style: ButtonStyle {
-                                background: Rectangle {
-                                    border.color: "#888"
-                                    border.width: control.activeFocus ? 2 : 1
-                                    radius: 4
-                                    gradient: Gradient {
-                                        GradientStop { position: 0 ; color: control.pressed ? "#ccc" : "#eee" }
-                                        GradientStop { position: 1 ; color: control.pressed ? "#aaa" : "#ccc" }
-                                    }
-                                }
-                                label: Label {
-                                    text: " ? "
-                                    font.bold: true
-                                }
                             }
                         }
                     }

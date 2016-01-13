@@ -1,5 +1,5 @@
 /* This file is part of the transform app
- * Copyright (c) 2015 Carlos E. Torchia
+ * Copyright (c) 2016 Carlos E. Torchia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,22 @@
 
 import QtQuick 2.5
 import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 
-Page {
-    title: "License"
-    TextArea {
-        id: licenseTextArea
-        width: parent.width
-        height: parent.height
-        readOnly: true
-        text: "Temp"
-        Component.onCompleted: {
-            var request = new XMLHttpRequest();
-            request.open('GET', 'LICENSE');
-            request.onreadystatechange = function(event) {
-                if (request.readyState == XMLHttpRequest.DONE) {
-                    licenseTextArea.text = request.responseText;
-                }
+Button {
+    style: ButtonStyle {
+        background: Rectangle {
+            border.color: "#888"
+            border.width: control.activeFocus ? 2 : 1
+            radius: 4
+            gradient: Gradient {
+                GradientStop { position: 0 ; color: control.pressed ? "#ccc" : "#eee" }
+                GradientStop { position: 1 ; color: control.pressed ? "#aaa" : "#ccc" }
             }
-            request.send();
+        }
+        label: Label {
+            text: " ? "
+            font.bold: true
         }
     }
 }

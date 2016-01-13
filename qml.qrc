@@ -17,5 +17,6 @@
         <file>FeedPage.qml</file>
         <file>util.js</file>
         <file>HelpRegexPage.qml</file>
+        <file>HelpButton.qml</file>
     </qresource>
 </RCC>
