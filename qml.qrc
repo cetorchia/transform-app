@@ -16,5 +16,6 @@
         <file>close47.png</file>
         <file>FeedPage.qml</file>
         <file>util.js</file>
+        <file>HelpRegexPage.qml</file>
     </qresource>
 </RCC>
