@@ -29,7 +29,8 @@ class CsvExporter : public QObject
 public:
     explicit CsvExporter(QObject *parent = 0);
 
-    Q_INVOKABLE void exportAsCsv();
+    Q_INVOKABLE void save();
+    Q_INVOKABLE void copy();
 
 signals:
     void filenameChanged();

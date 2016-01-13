@@ -22,7 +22,12 @@ CsvExporter::CsvExporter(QObject *parent) : QObject(parent)
 
 }
 
-void CsvExporter::exportAsCsv()
+void CsvExporter::save()
+{
+    // TODO
+}
+
+void CsvExporter::copy()
 {
     // TODO
 }

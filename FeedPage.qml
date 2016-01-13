@@ -259,7 +259,14 @@ Page {
                         visible: csvExporter.data.length > 0 ? true : false
                         text: "Export as CSV"
                         onClicked: {
-                            csvExporter.exportAsCsv();
+                            csvExporter.save();
+                        }
+                    }
+                    Button {
+                        visible: csvExporter.data.length > 0 ? true : false
+                        text: "Copy to clipboard"
+                        onClicked: {
+                            csvExporter.copy();
                         }
                     }
                 }
