@@ -128,14 +128,14 @@ Page {
                 ColumnLayout {
                     visible: regexFeedType.checked
                     TextField {
-                        id: regexTextField
-                        Layout.fillWidth: true
-                        placeholderText: "Regular expression"
-                    }
-                    TextField {
                         id: keyRegexTextField
                         Layout.fillWidth: true
                         placeholderText: "Key regular expression (optional)"
+                    }
+                    TextField {
+                        id: regexTextField
+                        Layout.fillWidth: true
+                        placeholderText: "Regular expression"
                     }
                     TextField {
                         id: regexFieldsTextField

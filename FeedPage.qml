@@ -166,21 +166,21 @@ Page {
                     visible: (feedData.type === "REGEX")
                     RowLayout {
                         Label {
-                            text: "Regular expression:"
-                            font.bold: true
-                        }
-                        Label {
-                            text: feedData.regex
-                            font.family: "monospace"
-                        }
-                    }
-                    RowLayout {
-                        Label {
                             text: "Key regular expression:"
                             font.bold: true
                         }
                         Label {
                             text: feedData.keyRegex
+                            font.family: "monospace"
+                        }
+                    }
+                    RowLayout {
+                        Label {
+                            text: "Regular expression:"
+                            font.bold: true
+                        }
+                        Label {
+                            text: feedData.regex
                             font.family: "monospace"
                         }
                     }
