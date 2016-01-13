@@ -112,7 +112,7 @@ Page {
     }
     CsvExporter {
         id: csvExporter
-        filename: feedData.name
+        filename: feedData.name + ".csv"
         onFinished: {
             csvExportMessageDialog.text = "Data written to " + path
             csvExportMessageDialog.open();
