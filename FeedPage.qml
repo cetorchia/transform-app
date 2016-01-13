@@ -23,6 +23,8 @@ import Feeds 1.0
 import Transformation 1.0
 import Export 1.0
 
+import "util.js" as Util
+
 Page {
     property var feedId
     property var feedData: ({})
@@ -85,6 +87,11 @@ Page {
                 });
                 transformedDataListModel.clear();
                 transformedData.forEach(function(object) {
+                    Object.keys(object).forEach(function (field) {
+                        if (typeof object[field] === "string") {
+                            object[field] = Util.htmlEntities(object[field]);
+                        }
+                    });
                     transformedDataListModel.append(object);
                 });
                 csvExporter.data = transformedData;
