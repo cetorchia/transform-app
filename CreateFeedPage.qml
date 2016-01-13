@@ -88,10 +88,18 @@ Page {
                     Layout.fillWidth: true
                     placeholderText: "Name"
                 }
-                TextField {
-                    id: urlTextField
-                    Layout.fillWidth: true
-                    placeholderText: "URL (optional)"
+                RowLayout {
+                    TextField {
+                        id: urlTextField
+                        Layout.fillWidth: true
+                        placeholderText: "URL (optional)"
+                    }
+                    Button {
+                        text: "Paste"
+                        onClicked: {
+                            urlTextField.paste();
+                        }
+                    }
                 }
                 ColumnLayout {
                     ExclusiveGroup { id: feedTypeGroup }
