@@ -15,6 +15,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+function escapeObject(object) {
+    var escapedObject = {};
+    Object.keys(object).forEach(function (field) {
+        if (typeof object[field] === "string") {
+            escapedObject[field] = htmlEntities(object[field]);
+        }
+    });
+    return escapedObject;
+}
+
 /**
  * htmlEntities()
  * https://css-tricks.com/snippets/javascript/htmlentities-for-javascript/

@@ -87,12 +87,7 @@ Page {
                 });
                 transformedDataListModel.clear();
                 transformedData.forEach(function(object) {
-                    var escapedObject = {};
-                    Object.keys(object).forEach(function (field) {
-                        if (typeof object[field] === "string") {
-                            escapedObject[field] = Util.htmlEntities(object[field]);
-                        }
-                    });
+                    var escapedObject = Util.escapeObject(object);
                     transformedDataListModel.append(escapedObject);
                 });
                 csvExporter.fields = fields;
