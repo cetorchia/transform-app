@@ -20,7 +20,11 @@
 #include "database.h"
 
 QSqlDatabase Database::db() {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("transform");
-    return db;
+    if (QSqlDatabase::contains("transform_connection")) {
+        return QSqlDatabase::database("transform_connection");
+    } else {
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "transform_connection");
+        db.setDatabaseName("transform");
+        return db;
+    }
 }
