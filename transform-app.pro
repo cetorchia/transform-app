@@ -8,7 +8,8 @@ SOURCES += main.cpp \
     feedstore.cpp \
     datatransformer.cpp \
     regextransformer.cpp \
-    csvexporter.cpp
+    csvexporter.cpp \
+    urlextractor.cpp
 
 RESOURCES += qml.qrc
 
@@ -26,6 +27,7 @@ HEADERS += \
     feedstore.h \
     datatransformer.h \
     regextransformer.h \
-    csvexporter.h
+    csvexporter.h \
+    urlextractor.h
 
 CONFIG += c++11

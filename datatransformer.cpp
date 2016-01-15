@@ -16,8 +16,6 @@
  */
 
 #include <QUrl>
-#include <QNetworkRequest>
-#include <QNetworkReply>
 
 #include "datatransformer.h"
 #include "feedstore.h"
@@ -31,8 +29,12 @@ void DataTransformer::transform(const QVariantMap& feedData)
 {
     QUrl url = feedData["url"].toUrl();
     if (url.isValid()) {
-        getFromUrl(url, [=](const QString& inData) {
+        urlExtractor.getFromUrl(url);
+        connect(&urlExtractor, &UrlExtractor::finished, [=](const QString& inData) {
             transform(feedData, inData);
+        });
+        connect(&urlExtractor, &UrlExtractor::error, [=](const QString& message) {
+            emit error(message);
         });
     } else {
         emit error("No way to get the data. Is the URL you specified invalid?");
@@ -46,26 +48,5 @@ void DataTransformer::transform(const QVariantMap& feedData, const QString& inDa
         QStringList fields = response["fields"].toStringList();
         QVariantList outData = response["data"].toList();
         emit finished(fields, outData);
-    }
-}
-
-void DataTransformer::getFromUrl(const QUrl& url, std::function<void (const QString&)> finished, int attempts)
-{
-    if (attempts < 10) {
-        QNetworkReply *reply = qnam.get(QNetworkRequest(QUrl(url)));
-        connect(reply, &QNetworkReply::finished, [=]() {
-            QString inData(reply->readAll());
-            reply->deleteLater();
-            QVariant redirectionTarget = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-            if (reply->error() != QNetworkReply::NoError) {
-                emit error("Network error: " + reply->errorString());
-            } else if (!redirectionTarget.isNull()) {
-                getFromUrl(redirectionTarget.toUrl(), finished, attempts + 1);
-            } else {
-                finished(inData);
-            }
-        });
-    } else {
-        emit error("Network error: redirect loop");
     }
 }

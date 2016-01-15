@@ -93,6 +93,19 @@ Page {
                         id: urlTextField
                         Layout.fillWidth: true
                         placeholderText: "URL (optional)"
+                        onEditingFinished: {
+                            if (urlTextField.text) {
+                                var request = new XMLHttpRequest();
+                                request.open('GET', urlTextField.text);
+                                request.onreadystatechange = function(event) {
+                                    if (request.readyState === XMLHttpRequest.DONE) {
+                                        var data = request.responseText;
+                                        console.log(data);
+                                    }
+                                }
+                                request.send();
+                            }
+                        }
                     }
                     Button {
                         text: "Paste"

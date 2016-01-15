@@ -21,9 +21,9 @@
 #include <functional>
 #include <QObject>
 #include <QVariant>
-#include <QNetworkAccessManager>
 
 #include "regextransformer.h"
+#include "urlextractor.h"
 
 class DataTransformer : public QObject
 {
@@ -41,10 +41,9 @@ signals:
 public slots:
 private slots:
 protected:
-    QNetworkAccessManager qnam;
     RegexTransformer regexTransformer;
+    UrlExtractor urlExtractor;
 private:
-    void getFromUrl(const QUrl& url, std::function<void (const QString&)>, int attempts = 0);
 };
 
 #endif // DATATRANSFORMER_H
