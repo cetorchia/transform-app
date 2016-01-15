@@ -7,7 +7,7 @@
         <file>MainPage.qml</file>
         <file>about.js</file>
         <file>back57.png</file>
-        <file>CreateFeedPage.qml</file>
+        <file>FeedSettingsPage.qml</file>
         <file>Page.qml</file>
         <file>PageView.qml</file>
         <file>ListViewItem.qml</file>

@@ -88,7 +88,7 @@ Page {
             text: "Create Feed"
             Layout.alignment: Qt.AlignTop | Qt.AlignLeft
             Layout.fillWidth: true
-            onClicked: goTo("CreateFeedPage.qml");
+            onClicked: goTo("FeedSettingsPage.qml");
         }
         ScrollView {
             Layout.fillWidth: true
@@ -119,7 +119,7 @@ Page {
                         ListViewItemButton {
                             Layout.fillWidth: false
                             onClicked: function() {
-                                goTo("CreateFeedPage.qml", {id: feedId});
+                                goTo("FeedSettingsPage.qml", {id: feedId});
                             }
                             Image {
                                 anchors.fill: parent
