@@ -127,7 +127,6 @@ Page {
         anchors.fill: parent
         Flickable {
             anchors.fill: parent
-            contentHeight: stuff.implicitHeight
             ColumnLayout {
                 id: stuff
                 anchors.fill: parent
@@ -178,7 +177,6 @@ Page {
                             doTransform();
                         }
                     }
-                    Item { Layout.fillWidth: true }
                     Button {
                         visible: csvExporter.data.length > 0 ? true : false
                         text: "Export as CSV"
@@ -188,7 +186,7 @@ Page {
                     }
                     Button {
                         visible: csvExporter.data.length > 0 ? true : false
-                        text: "Copy to clipboard"
+                        text: "Copy"
                         onClicked: {
                             csvExporter.copy();
                         }
@@ -196,7 +194,7 @@ Page {
                 }
                 Item {
                     Layout.fillWidth: true
-                    height: 450
+                    Layout.fillHeight: true
                     TableView {
                         id: tableView
                         visible: (transformedDataListModel.count > 0)
@@ -208,10 +206,6 @@ Page {
                             }
                         }
                     }
-                }
-                Item {
-                    id: keepMeAtTheBottomToPreserveAlignment
-                    Layout.fillHeight: true
                 }
             }
         }
