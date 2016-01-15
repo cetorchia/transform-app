@@ -43,10 +43,25 @@ void DataTransformer::transform(const QVariantMap& feedData)
 
 void DataTransformer::transform(const QVariantMap& feedData, const QString& inData)
 {
-    if (feedData["type"] == "REGEX") {
-        QVariantMap response = regexTransformer.transform(feedData, inData);
-        QStringList fields = response["fields"].toStringList();
-        QVariantList outData = response["data"].toList();
-        emit finished(fields, outData);
+    QStringList fields;
+    QVariantList outData;
+    for (QVariant var: feedData["query"].toList()) {
+        QVariantMap queryElement = var.toMap();
+        if (!queryElement["regex"].toString().isEmpty()) {
+            QVariantMap response = regexTransformer.transform(queryElement, inData);
+            outData += response["data"].toList();
+        }
+        QString keyField = queryElement["key"].toString();
+        QStringList queryFields = queryElement["fields"].toStringList();
+        if (!keyField.isEmpty()) {
+            queryFields.removeOne(keyField);
+            queryFields.insert(0, keyField);
+        }
+        for (QString field: queryFields) {
+            if (!fields.contains(field)) {
+                fields.append(field);
+            }
+        }
     }
+    emit finished(fields, outData);
 }

@@ -34,16 +34,12 @@ const QString FeedStore::tableName() {
 }
 
 const QStringList FeedStore::allowedFields() {
-    QStringList allowedFields = QStringList();
-    allowedFields << "name"
-                  << "type"
-                  << "url"
-                  << "key"
-                  << "keyRegex"
-                  << "regex"
-                  << "regexFields"
-                  << "xmlPathex"
-                  << "jsonPathex";
+    QStringList allowedFields
+    {
+        "name",
+        "url",
+        "query"
+    };
     return allowedFields;
 }
 
@@ -51,39 +47,70 @@ const QStringList FeedStore::requiredFields() {
     return QStringList();
 }
 
+const QStringList FeedStore::allowedQueryFields() {
+    QStringList allowedQueryFields
+    {
+        "pathex",
+        "fields",
+        "regex",
+        "key",
+        "keyRegex",
+    };
+    return allowedQueryFields;
+}
+
 bool FeedStore::validate(const QVariantMap& data) {
     if (DataStore::validate(data)) {
         QString name = data["name"].toString();
-        QString type = data["type"].toString();
-        QString regex = data["regex"].toString();
-        QString keyRegex = data["keyRegex"].toString();
-        QString regexFields = data["regexFields"].toString();
-        QString xmlPathex = data["xmlPathex"].toString();
-        QString jsonPathex = data["jsonPathex"].toString();
         if (name.isEmpty()) {
             emit error("Name is required.");
             return false;
-        } else if (type == "REGEX" && regex.isEmpty()) {
-            emit error("Regular expression is required.");
-            return false;
-        } else if (type == "REGEX" && !regex.isEmpty() && !QRegularExpression(regex).isValid()) {
-            emit error("Invalid regular expression: " + regex);
-            return false;
-        } else if (type == "REGEX" && !keyRegex.isEmpty() && !QRegularExpression(keyRegex).isValid()) {
-            emit error("Invalid key regular expression: " + keyRegex);
-            return false;
-        } else if (type == "REGEX" && regexFields.isEmpty()) {
-            emit error("Fields are required.");
-            return false;
-        } else if (type == "XML_PATHEX" && xmlPathex.isEmpty()) {
-            emit error("Path expression is required.");
-            return false;
-        } else if (type == "JSON_PATHEX" && jsonPathex.isEmpty()) {
-            emit error("Path expression is required.");
-            return false;
-        } else {
-            return true;
         }
+        QVariantList query = data["query"].toList();
+        if (query.isEmpty()) {
+            emit error("Query is required");
+            return false;
+        }
+        for (QVariant var: query) {
+            QVariantMap queryElement = var.toMap();
+            QStringList allowedQueryFields = this->allowedQueryFields();
+            for (QString field: queryElement.keys()) {
+                if (!allowedQueryFields.contains(field)) {
+                    emit error("Unallowed query field \"" + field + "\"");
+                    return false;
+                }
+            }
+            QString pathex = queryElement["pathex"].toString();
+            QStringList fields = queryElement["fields"].toStringList();
+            QString regex = queryElement["regex"].toString();
+            QString key = queryElement["key"].toString();
+            QString keyRegex = queryElement["keyRegex"].toString();
+            if (fields.isEmpty()) {
+                emit error("Field names are required.");
+                return false;
+            }
+            if (pathex.isEmpty() && regex.isEmpty()) {
+                emit error("Path expression or regular expression is required.");
+                return false;
+            }
+            if (!regex.isEmpty() && !QRegularExpression(regex).isValid()) {
+                emit error("Invalid regular expression: " + regex);
+                return false;
+            }
+            if (!keyRegex.isEmpty() && regex.isEmpty()) {
+                emit error("Regular expression is required for key regular expression.");
+                return false;
+            }
+            if (!keyRegex.isEmpty() && key.isEmpty()) {
+                emit error("Key field name is required for key regular expression");
+                return false;
+            }
+            if (!keyRegex.isEmpty() && !QRegularExpression(keyRegex).isValid()) {
+                emit error("Invalid key regular expression: " + keyRegex);
+                return false;
+            }
+        }
+        return true;
     } else {
         return false;
     }

@@ -58,19 +58,11 @@ Page {
                 var feedData = response.data;
                 nameTextField.text = feedData.name;
                 urlTextField.text = feedData.url;
-                if (feedData.type === "REGEX") {
-                    regexFeedType.checked = true;
-                } else if (feedData.type === "XML_PATHEX") {
-                    xmlPathexFeedType.checked = true;
-                } else if (feedData.type === "JSON_PATHEX") {
-                    jsonPathexFeedType.checked = true;
-                }
-                keyTextField.text = feedData.key;
-                regexTextField.text = feedData.regex;
-                keyRegexTextField.text = feedData.keyRegex;
-                regexFieldsTextField.text = feedData.regexFields;
-                xmlPathexTextField.text = feedData.xmlPathex;
-                jsonPathexTextField.text = feedData.jsonPathex;
+                pathexTextField.text = feedData.query[0].pathex;
+                fieldsTextField.text = feedData.query[0].fields.join(", ");
+                regexTextField.text = feedData.query[0].regex;
+                keyTextField.text = feedData.query[0].key;
+                keyRegexTextField.text = feedData.query[0].keyRegex;
             }
         }
     }
@@ -93,6 +85,19 @@ Page {
                         id: urlTextField
                         Layout.fillWidth: true
                         placeholderText: "URL (optional)"
+                        onEditingFinished: {
+                            if (urlTextField.text) {
+                                var request = new XMLHttpRequest();
+                                request.open('GET', urlTextField.text);
+                                request.onreadystatechange = function(event) {
+                                    if (request.readyState === XMLHttpRequest.DONE) {
+                                        var data = request.responseText;
+                                        // TODO: parse data and set tree view
+                                    }
+                                }
+                                //request.send();
+                            }
+                        }
                     }
                     Button {
                         text: "Paste"
@@ -102,42 +107,15 @@ Page {
                     }
                 }
                 ColumnLayout {
-                    ExclusiveGroup { id: feedTypeGroup }
-                    RadioButton {
-                        id: regexFeedType
-                        text: "Regular Expression"
-                        checked: true
-                        exclusiveGroup: feedTypeGroup
+                    TextField {
+                        id: pathexTextField
+                        Layout.fillWidth: true
+                        placeholderText: "Path expression"
                     }
-                    RadioButton {
-                        id: xmlPathexFeedType
-                        text: "Path expression (XML)"
-                        exclusiveGroup: feedTypeGroup
-                    }
-                    RadioButton {
-                        id: jsonPathexFeedType
-                        text: "Path expression (JSON)"
-                        exclusiveGroup: feedTypeGroup
-                    }
-                }
-                TextField {
-                    id: keyTextField
-                    Layout.fillWidth: true
-                    placeholderText: "Key field name (optional)"
-                }
-                ColumnLayout {
-                    visible: regexFeedType.checked
-                    RowLayout {
-                        TextField {
-                            id: keyRegexTextField
-                            Layout.fillWidth: true
-                            placeholderText: "Key regular expression (optional)"
-                        }
-                        HelpButton {
-                            onClicked: {
-                                goTo("HelpRegexPage.qml");
-                            }
-                        }
+                    TextField {
+                        id: fieldsTextField
+                        Layout.fillWidth: true
+                        placeholderText: "Field names (comma-separated)"
                     }
                     RowLayout {
                         TextField {
@@ -152,25 +130,21 @@ Page {
                         }
                     }
                     TextField {
-                        id: regexFieldsTextField
+                        id: keyTextField
                         Layout.fillWidth: true
-                        placeholderText: "Field names (comma-separated)"
+                        placeholderText: "Key field name (optional)"
                     }
-                }
-                ColumnLayout {
-                    visible: xmlPathexFeedType.checked
-                    TextField {
-                        id: xmlPathexTextField
-                        Layout.fillWidth: true
-                        placeholderText: "XML path expression"
-                    }
-                }
-                ColumnLayout {
-                    visible: jsonPathexFeedType.checked
-                    TextField {
-                        id: jsonPathexTextField
-                        Layout.fillWidth: true
-                        placeholderText: "JSON path expression"
+                    RowLayout {
+                        TextField {
+                            id: keyRegexTextField
+                            Layout.fillWidth: true
+                            placeholderText: "Key regular expression (optional)"
+                        }
+                        HelpButton {
+                            onClicked: {
+                                goTo("HelpRegexPage.qml");
+                            }
+                        }
                     }
                 }
                 RowLayout {
@@ -178,24 +152,25 @@ Page {
                         id: submitButton
                         text: feedId ? "Update" : "Create"
                         onClicked: {
-                            var feedType;
-                            if (regexFeedType.checked) {
-                                feedType = "REGEX";
-                            } else if (xmlPathexFeedType.checked) {
-                                feedType = "XML_PATHEX";
-                            } else if (jsonPathexFeedType.checked) {
-                                feedType = "JSON_PATHEX";
+                            var fields;
+                            if (fieldsTextField.text) {
+                                fields = fieldsTextField.text.split(/\s*,\s*/);
+                            } else {
+                                fields = [];
                             }
+
                             var feedData = {
                                 name: nameTextField.text,
                                 url: urlTextField.text,
-                                type: feedType,
-                                key: keyTextField.text,
-                                regex: regexTextField.text,
-                                keyRegex: keyRegexTextField.text,
-                                regexFields: regexFieldsTextField.text,
-                                xmlPathex: xmlPathexTextField.text,
-                                jsonPathex: jsonPathexTextField.text
+                                query: [
+                                    {
+                                        pathex: pathexTextField.text,
+                                        fields: fields,
+                                        regex: regexTextField.text,
+                                        key: keyTextField.text,
+                                        keyRegex: keyRegexTextField.text
+                                    }
+                                ]
                             };
                             if (feedId) {
                                 feedStore.save(feedId, feedData);

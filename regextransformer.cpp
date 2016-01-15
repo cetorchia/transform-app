@@ -24,14 +24,14 @@ RegexTransformer::RegexTransformer(QObject *parent) : QObject(parent)
 
 }
 
-QVariantMap RegexTransformer::transform(const QVariantMap& feedData, const QString& inData)
+QVariantMap RegexTransformer::transform(const QVariantMap& queryElement, const QString& inData)
 {
-    QRegularExpression re(feedData["regex"].toString(),
+    QRegularExpression re(queryElement["regex"].toString(),
             QRegularExpression::MultilineOption);
-    QStringList fields = parseFields(feedData["regexFields"].toString());
     QVariantList outData;
-    QString keyField = feedData["key"].toString();
-    QString keyRegex = feedData["keyRegex"].toString();
+    QString keyField = queryElement["key"].toString();
+    QString keyRegex = queryElement["keyRegex"].toString();
+    QStringList fields = queryElement["fields"].toStringList();
     if (!keyField.isEmpty() && !keyRegex.isEmpty()) {
         QRegularExpression keyRe(keyRegex);
         QRegularExpressionMatchIterator i = keyRe.globalMatch(inData);
@@ -56,22 +56,12 @@ QVariantMap RegexTransformer::transform(const QVariantMap& feedData, const QStri
     } else {
         matchData(outData, re, fields, inData);
     }
-    if (!keyField.isEmpty()) {
-        fields.removeOne(keyField);
-        fields.insert(0, keyField);
-    }
     QVariantMap response
     {
         {"fields", fields},
         {"data", outData}
     };
     return response;
-}
-
-QStringList RegexTransformer::parseFields(const QString& fieldsString)
-{
-    QRegularExpression splitRe("\\s*,\\s*");
-    return fieldsString.split(splitRe, QString::SkipEmptyParts);
 }
 
 void RegexTransformer::matchData(QVariantList& outData, const QRegularExpression& re, const QStringList& fields, const QString& inData)

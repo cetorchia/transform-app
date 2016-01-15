@@ -38,6 +38,7 @@ signals:
 public slots:
 
 private:
+    const QStringList allowedQueryFields();
 };
 
 #endif // FEEDSTORE_H

@@ -135,17 +135,6 @@ Page {
                     text: feedData.name
                     font.bold: true
                 }
-                Label {
-                    property string value: feedData.type
-                    text: if (value === "REGEX") {
-                              "Regular expression"
-                          } else if (value === "XML_PATHEX") {
-                              "Path expression (XML)"
-                          } else if (value === "JSON_PATHEX") {
-                              "Path expression (JSON)"
-                          }
-                    font.italic: true
-                }
                 RowLayout {
                     Label {
                         text: "URL:"
@@ -154,75 +143,6 @@ Page {
                     Label {
                         text: feedData.url
                         font.family: "monospace"
-                    }
-                }
-                RowLayout {
-                    Label {
-                        text: "Key field name:"
-                        font.bold: true
-                    }
-                    Label {
-                        text: feedData.key
-                        font.family: "monospace"
-                    }
-                }
-                ColumnLayout {
-                    visible: (feedData.type === "REGEX")
-                    RowLayout {
-                        Label {
-                            text: "Key regular expression:"
-                            font.bold: true
-                        }
-                        Label {
-                            text: feedData.keyRegex
-                            font.family: "monospace"
-                        }
-                    }
-                    RowLayout {
-                        Label {
-                            text: "Regular expression:"
-                            font.bold: true
-                        }
-                        Label {
-                            text: feedData.regex
-                            font.family: "monospace"
-                        }
-                    }
-                    RowLayout {
-                        Label {
-                            text: "Field names:"
-                            font.bold: true
-                        }
-                        Label {
-                            text: feedData.regexFields
-                            font.family: "monospace"
-                        }
-                    }
-                }
-                ColumnLayout {
-                    visible: (feedData.type === "XML_PATHEX")
-                    RowLayout {
-                        Label {
-                            text: "XML path expression:"
-                            font.bold: true
-                        }
-                        Label {
-                            text: feedData.xmlPathex
-                            font.family: "monospace"
-                        }
-                    }
-                }
-                ColumnLayout {
-                    visible: (feedData.type === "JSON_PATHEX")
-                    RowLayout {
-                        Label {
-                            text: "JSON path expression:"
-                            font.bold: true
-                        }
-                        Label {
-                            text: feedData.jsonPathex
-                            font.family: "monospace"
-                        }
                     }
                 }
                 Label {
