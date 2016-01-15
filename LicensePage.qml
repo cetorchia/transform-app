@@ -30,7 +30,7 @@ Page {
             var request = new XMLHttpRequest();
             request.open('GET', 'LICENSE');
             request.onreadystatechange = function(event) {
-                if (request.readyState == XMLHttpRequest.DONE) {
+                if (request.readyState === XMLHttpRequest.DONE) {
                     licenseTextArea.text = request.responseText;
                 }
             }
