@@ -128,7 +128,6 @@ Page {
         Flickable {
             anchors.fill: parent
             ColumnLayout {
-                id: stuff
                 anchors.fill: parent
                 Label {
                     text: feedData.name

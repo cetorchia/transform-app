@@ -71,10 +71,8 @@ Page {
         anchors.fill: parent
         Flickable {
             anchors.fill: parent
-            contentHeight: stuff.implicitHeight
             ColumnLayout {
-                id: stuff
-                anchors.fill: parent
+                width: parent.width
                 TextField {
                     id: nameTextField
                     Layout.fillWidth: true
@@ -179,10 +177,6 @@ Page {
                             }
                         }
                     }
-                }
-                Item {
-                    id: keepMeAtTheBottomToPreserveAlignment
-                    Layout.fillHeight: true
                 }
             }
         }
