@@ -60,9 +60,12 @@ Page {
                 urlTextField.text = feedData.url;
                 pathexTextField.text = feedData.query[0].pathex;
                 fieldsTextField.text = feedData.query[0].fields.join(", ");
-                regexTextField.text = feedData.query[0].regex;
-                keyTextField.text = feedData.query[0].key;
-                keyRegexTextField.text = feedData.query[0].keyRegex;
+                if (feedData.query[0].regex) {
+                    regexCheckBox.checked = true;
+                    regexTextField.text = feedData.query[0].regex;
+                    keyTextField.text = feedData.query[0].key;
+                    keyRegexTextField.text = feedData.query[0].keyRegex;
+                }
             }
         }
     }
@@ -110,12 +113,22 @@ Page {
                         Layout.fillWidth: true
                         placeholderText: "Path expression"
                     }
+                    CheckBox {
+                        id: regexCheckBox
+                        checked: false
+                        text: "Regular expression"
+                    }
                     TextField {
                         id: fieldsTextField
                         Layout.fillWidth: true
-                        placeholderText: "Field names (comma-separated)"
+                        placeholderText: if (regexCheckBox.checked) {
+                                             "Field names (comma-separated)"
+                                         } else {
+                                             "Field name"
+                                         }
                     }
                     RowLayout {
+                        visible: regexCheckBox.checked
                         TextField {
                             id: regexTextField
                             Layout.fillWidth: true
@@ -129,10 +142,12 @@ Page {
                     }
                     TextField {
                         id: keyTextField
+                        visible: regexCheckBox.checked
                         Layout.fillWidth: true
                         placeholderText: "Key field name (optional)"
                     }
                     RowLayout {
+                        visible: regexCheckBox.checked
                         TextField {
                             id: keyRegexTextField
                             Layout.fillWidth: true
@@ -150,26 +165,26 @@ Page {
                         id: submitButton
                         text: feedId ? "Update" : "Create"
                         onClicked: {
+                            var feedData = {
+                                name: nameTextField.text,
+                                url: urlTextField.text,
+                                query: []
+                            };
                             var fields;
                             if (fieldsTextField.text) {
                                 fields = fieldsTextField.text.split(/\s*,\s*/);
                             } else {
                                 fields = [];
                             }
-
-                            var feedData = {
-                                name: nameTextField.text,
-                                url: urlTextField.text,
-                                query: [
-                                    {
-                                        pathex: pathexTextField.text,
-                                        fields: fields,
-                                        regex: regexTextField.text,
-                                        key: keyTextField.text,
-                                        keyRegex: keyRegexTextField.text
-                                    }
-                                ]
-                            };
+                            feedData.query.push({
+                                                    pathex: pathexTextField.text,
+                                                    fields: fields
+                                                });
+                            if (regexCheckBox.checked) {
+                                feedData.query[0].regex = regexTextField.text;
+                                feedData.query[0].key = keyTextField.text;
+                                feedData.query[0].keyRegex = keyRegexTextField.text;
+                            }
                             if (feedId) {
                                 feedStore.save(feedId, feedData);
                             } else {
