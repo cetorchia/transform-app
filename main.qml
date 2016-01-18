@@ -23,8 +23,8 @@ import "about.js" as About
 
 ApplicationWindow {
     visible: true
-    width: 640
-    height: 480
+    width: 480
+    height: 640
     title: About.workName + " (c) " + About.copyright + " (see License for terms and conditions)"
     PageView {
         id: pageView
