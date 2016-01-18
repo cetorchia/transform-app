@@ -104,7 +104,7 @@ Page {
                         Item { Layout.fillWidth: true }
                         ListViewItemButton {
                             Layout.fillWidth: false
-                            onClicked: function() {
+                            onClicked: {
                                 goTo("FeedSettingsPage.qml", {id: feedId});
                             }
                             Image {
@@ -116,8 +116,8 @@ Page {
                         }
                         ListViewItemButton {
                             Layout.fillWidth: false
-                            onClicked: function() {
-                                deleteFeed(feedId, feedName)
+                            onClicked: {
+                                deleteFeed(feedId, feedName);
                             }
                             Image {
                                 anchors.fill: parent

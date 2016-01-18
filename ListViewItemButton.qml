@@ -21,14 +21,14 @@ import QtQuick.Layouts 1.1
 
 Item {
     id: self
-    property var onClicked: function() {}
+    signal clicked
     width: 64
     height: 64
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
         onClicked: {
-            self.onClicked();
+            self.clicked();
         }
         onEntered: {
             rect.color = rect.hoverColour;
