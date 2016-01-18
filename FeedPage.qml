@@ -78,10 +78,12 @@ Page {
                 for (var i = tableView.columnCount - 1; i >= 0; i--) {
                     tableView.removeColumn(i);
                 }
+                var columnWidth = tableView.width / fields.length;
                 fields.forEach(function(field) {
                     var tableViewColumn = tableViewColumnComponent.createObject(tableView, {
                                                                                     role: field,
-                                                                                    title: field
+                                                                                    title: field,
+                                                                                    width: columnWidth
                                                                                 });
                     tableView.addColumn(tableViewColumn);
                 });
