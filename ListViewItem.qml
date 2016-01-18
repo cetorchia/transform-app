@@ -17,12 +17,13 @@
 
 import QtQuick 2.5
 import QtQuick.Controls 1.4
+import QtQuick.Window 2.0
 import QtQuick.Layouts 1.1
 
 Item {
     id: self
     property var onClicked: function() {}
-    height: 128
+    height: (Screen.width < Screen.height ? Screen.height : Screen.width) / 12
     width: parent.width
     Rectangle {
         id: rect

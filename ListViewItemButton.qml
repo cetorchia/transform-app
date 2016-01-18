@@ -17,13 +17,14 @@
 
 import QtQuick 2.5
 import QtQuick.Controls 1.4
+import QtQuick.Window 2.0
 import QtQuick.Layouts 1.1
 
 Item {
     id: self
     signal clicked
-    width: 64
-    height: 64
+    width: Screen.height / 20
+    height: width
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -47,8 +48,8 @@ Item {
         id: rect
         anchors.fill: parent
         property string normalColour: "#f8f8f8"
-        property string hoverColour: "lightsteelblue"
-        property string pressedColour: "steelblue"
+        property string hoverColour: "#d8d8d8"
+        property string pressedColour: "#b8b8b8"
         color: normalColour
         border.color: "#a0a0a0"
         radius: 3
