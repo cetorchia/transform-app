@@ -22,7 +22,7 @@ import QtQuick.Layouts 1.1
 
 Item {
     id: self
-    property var onClicked: function() {}
+    signal clicked
     height: (Screen.width < Screen.height ? Screen.height : Screen.width) / 12
     width: parent.width
     Rectangle {
@@ -39,7 +39,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onClicked: {
-            self.onClicked();
+            self.clicked();
         }
         onEntered: {
             rect.color = rect.hoverColour;

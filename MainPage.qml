@@ -127,7 +127,7 @@ Page {
                             }
                         }
                     }
-                    onClicked: function() {
+                    onClicked: {
                          goTo("FeedPage.qml", {id: feedId});
                     }
                 }
