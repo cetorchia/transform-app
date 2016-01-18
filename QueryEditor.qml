@@ -89,6 +89,7 @@ Item {
     ScrollView {
         anchors.fill: parent
         ColumnLayout {
+            width: queryEditor.width
             ColumnLayout {
                 id: stuff
                 Layout.leftMargin: 10
@@ -118,7 +119,7 @@ Item {
                     TextField {
                         id: regexTextField
                         Layout.fillWidth: true
-                        placeholderText: "Regular expression"
+                        placeholderText: "Regular expression (optional)"
                     }
                     HelpButton {
                         onClicked: {
