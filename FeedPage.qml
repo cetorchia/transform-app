@@ -123,87 +123,81 @@ Page {
         title: "CSV Export"
         standardButtons: StandardButton.Ok
     }
-    ScrollView {
+    ColumnLayout {
         anchors.fill: parent
-        Flickable {
-            anchors.fill: parent
-            ColumnLayout {
+        Label {
+            text: feedData.name
+            font.bold: true
+        }
+        RowLayout {
+            Label {
+                text: "URL:"
+                font.bold: true
+            }
+            Label {
+                text: feedData.url
+                font.family: "monospace"
+            }
+        }
+        Label {
+            text: "Data"
+            font.bold: true
+        }
+        ColumnLayout {
+            visible: (feedId && !feedData.url)
+            Layout.fillWidth: true
+            Button {
+                text: "Paste from clipboard"
+                onClicked: {
+                    dataTextArea.paste();
+                }
+            }
+            Label {
+                text: "Input data to transform:"
+                font.italic: true
+            }
+            TextArea {
+                id: dataTextArea
+                Layout.fillWidth: true
+                width: parent.width
+                height: 300
+            }
+        }
+        RowLayout {
+            visible: (feedId && !feedData.url) || (transformedDataListModel.count > 0)
+            Layout.fillWidth: true
+            Button {
+                text: (transformedDataListModel.count === 0) ? "Go" : "Reload"
+                onClicked: {
+                    doTransform();
+                }
+            }
+            Button {
+                visible: csvExporter.data.length > 0 ? true : false
+                text: "Export as CSV"
+                onClicked: {
+                    csvExporter.save();
+                }
+            }
+            Button {
+                visible: csvExporter.data.length > 0 ? true : false
+                text: "Copy"
+                onClicked: {
+                    csvExporter.copy();
+                }
+            }
+        }
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            TableView {
+                id: tableView
+                visible: (transformedDataListModel.count > 0)
+                model: transformedDataListModel
                 anchors.fill: parent
-                Label {
-                    text: feedData.name
-                    font.bold: true
-                }
-                RowLayout {
-                    Label {
-                        text: "URL:"
-                        font.bold: true
-                    }
-                    Label {
-                        text: feedData.url
-                        font.family: "monospace"
-                    }
-                }
-                Label {
-                    text: "Data"
-                    font.bold: true
-                }
-                ColumnLayout {
-                    visible: (feedId && !feedData.url)
-                    Layout.fillWidth: true
-                    Button {
-                        text: "Paste from clipboard"
-                        onClicked: {
-                            dataTextArea.paste();
-                        }
-                    }
-                    Label {
-                        text: "Input data to transform:"
-                        font.italic: true
-                    }
-                    TextArea {
-                        id: dataTextArea
-                        Layout.fillWidth: true
-                        width: parent.width
-                        height: 300
-                    }
-                }
-                RowLayout {
-                    visible: (feedId && !feedData.url) || (transformedDataListModel.count > 0)
-                    Layout.fillWidth: true
-                    Button {
-                        text: (transformedDataListModel.count === 0) ? "Go" : "Reload"
-                        onClicked: {
-                            doTransform();
-                        }
-                    }
-                    Button {
-                        visible: csvExporter.data.length > 0 ? true : false
-                        text: "Export as CSV"
-                        onClicked: {
-                            csvExporter.save();
-                        }
-                    }
-                    Button {
-                        visible: csvExporter.data.length > 0 ? true : false
-                        text: "Copy"
-                        onClicked: {
-                            csvExporter.copy();
-                        }
-                    }
-                }
-                Item {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    TableView {
-                        id: tableView
-                        visible: (transformedDataListModel.count > 0)
-                        model: transformedDataListModel
-                        anchors.fill: parent
-                        Component {
-                            id: tableViewColumnComponent
-                            TableViewColumn {
-                            }
-                        }
+                Component {
+                    id: tableViewColumnComponent
+                    TableViewColumn {
                     }
                 }
             }
