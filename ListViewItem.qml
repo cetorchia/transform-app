@@ -20,6 +20,8 @@ import QtQuick.Controls 1.4
 import QtQuick.Window 2.0
 import QtQuick.Layouts 1.1
 
+import "theme.js" as Theme
+
 Item {
     id: self
     signal clicked
@@ -28,11 +30,11 @@ Item {
     Rectangle {
         id: rect
         anchors.fill: parent
-        property string normalColour: "#f8f8f8"
-        property string hoverColour: "#d8d8d8"
-        property string pressedColour: "#b8b8b8"
+        property string normalColour: Theme.widgetBackground
+        property string hoverColour: Theme.widgetHover
+        property string pressedColour: Theme.widgetPressed
         color: normalColour
-        border.color: "#e0e0e0"
+        border.color: Theme.widgetBorder
         radius: 3
     }
     MouseArea {

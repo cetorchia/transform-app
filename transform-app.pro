@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     datatransformer.cpp \
     regextransformer.cpp \
     csvexporter.cpp \
-    urlextractor.cpp
+    urlextractor.cpp \
+    treemodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -28,6 +29,7 @@ HEADERS += \
     datatransformer.h \
     regextransformer.h \
     csvexporter.h \
-    urlextractor.h
+    urlextractor.h \
+    treemodel.h
 
 CONFIG += c++11

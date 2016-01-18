@@ -20,6 +20,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
 import Feeds 1.0
+import Trees 1.0
 
 Page {
     property var feedId
@@ -58,140 +59,86 @@ Page {
                 var feedData = response.data;
                 nameTextField.text = feedData.name;
                 urlTextField.text = feedData.url;
-                pathexTextField.text = feedData.query[0].pathex;
-                fieldsTextField.text = feedData.query[0].fields.join(", ");
-                if (feedData.query[0].regex) {
-                    regexCheckBox.checked = true;
-                    regexTextField.text = feedData.query[0].regex;
-                    keyTextField.text = feedData.query[0].key;
-                    keyRegexTextField.text = feedData.query[0].keyRegex;
-                }
+                queryEditor.queryElements = feedData.query;
             }
         }
     }
-    title: feedId ? "Update Feed" : "Create Feed"
-    ScrollView {
+    title: feedId ? "Edit Feed" : "Create Feed"
+    ColumnLayout {
         anchors.fill: parent
-        Flickable {
-            anchors.fill: parent
-            ColumnLayout {
-                width: parent.width
-                TextField {
-                    id: nameTextField
-                    Layout.fillWidth: true
-                    placeholderText: "Name"
-                }
-                RowLayout {
-                    TextField {
-                        id: urlTextField
-                        Layout.fillWidth: true
-                        placeholderText: "URL (optional)"
-                        onEditingFinished: {
-                            if (urlTextField.text) {
-                                var request = new XMLHttpRequest();
-                                request.open('GET', urlTextField.text);
-                                request.onreadystatechange = function(event) {
-                                    if (request.readyState === XMLHttpRequest.DONE) {
-                                        var data = request.responseText;
-                                        // TODO: parse data and set tree view
-                                    }
-                                }
-                                //request.send();
+        TextField {
+            id: nameTextField
+            Layout.fillWidth: true
+            placeholderText: "Name"
+        }
+        RowLayout {
+            TextField {
+                id: urlTextField
+                Layout.fillWidth: true
+                placeholderText: "URL (optional)"
+                onEditingFinished: {
+                    if (urlTextField.text) {
+                        var request = new XMLHttpRequest();
+                        request.open('GET', urlTextField.text);
+                        request.onreadystatechange = function(event) {
+                            if (request.readyState === XMLHttpRequest.DONE) {
+                                var data = request.responseText;
+                                // TODO: parse data and set tree view
                             }
                         }
-                    }
-                    Button {
-                        text: "Paste"
-                        onClicked: {
-                            urlTextField.paste();
-                        }
+                        //request.send();
                     }
                 }
-                ColumnLayout {
-                    TextField {
-                        id: pathexTextField
-                        Layout.fillWidth: true
-                        placeholderText: "Path expression"
-                    }
-                    CheckBox {
-                        id: regexCheckBox
-                        checked: false
-                        text: "Regular expression"
-                    }
-                    TextField {
-                        id: fieldsTextField
-                        Layout.fillWidth: true
-                        placeholderText: if (regexCheckBox.checked) {
-                                             "Field names (comma-separated)"
-                                         } else {
-                                             "Field name"
-                                         }
-                    }
-                    RowLayout {
-                        visible: regexCheckBox.checked
-                        TextField {
-                            id: regexTextField
-                            Layout.fillWidth: true
-                            placeholderText: "Regular expression"
-                        }
-                        HelpButton {
-                            onClicked: {
-                                goTo("HelpRegexPage.qml");
-                            }
-                        }
-                    }
-                    TextField {
-                        id: keyTextField
-                        visible: regexCheckBox.checked
-                        Layout.fillWidth: true
-                        placeholderText: "Key field name (optional)"
-                    }
-                    RowLayout {
-                        visible: regexCheckBox.checked
-                        TextField {
-                            id: keyRegexTextField
-                            Layout.fillWidth: true
-                            placeholderText: "Key regular expression (optional)"
-                        }
-                        HelpButton {
-                            onClicked: {
-                                goTo("HelpRegexPage.qml");
-                            }
-                        }
-                    }
+            }
+            Button {
+                text: "Paste"
+                onClicked: {
+                    urlTextField.paste();
                 }
-                RowLayout {
-                    Button {
-                        id: submitButton
-                        text: feedId ? "Update" : "Create"
-                        onClicked: {
-                            var feedData = {
-                                name: nameTextField.text,
-                                url: urlTextField.text,
-                                query: []
-                            };
-                            var fields;
-                            if (fieldsTextField.text) {
-                                fields = fieldsTextField.text.split(/\s*,\s*/);
-                            } else {
-                                fields = [];
-                            }
-                            feedData.query.push({
-                                                    pathex: pathexTextField.text,
-                                                    fields: fields
-                                                });
-                            if (regexCheckBox.checked) {
-                                feedData.query[0].regex = regexTextField.text;
-                                feedData.query[0].key = keyTextField.text;
-                                feedData.query[0].keyRegex = keyRegexTextField.text;
-                            }
-                            if (feedId) {
-                                feedStore.save(feedId, feedData);
-                            } else {
-                                feedStore.save(feedData);
-                            }
-                        }
-                    }
+            }
+        }
+        TreeListView {
+            id: treeListView
+            visible: true
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            model: TreeModel {
+            }
+            onSelectedElementChanged: {
+                if (selectedElement) {
+                    treeListView.visible = false;
+                    queryEditor.open(selectedElement);
+                }
+            }
+        }
+        QueryEditor {
+            id: queryEditor
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            onRejected: {
+                treeListView.visible = true;
+            }
+            onAccepted: {
+                treeListView.visible = true;
+            }
+        }
+        Button {
+            id: submitButton
+            text: "Save"
+            enabled: !queryEditor.visible
+            Layout.topMargin: 10
+            Layout.bottomMargin: 10
+            Layout.fillWidth: true
+            onClicked: {
+                var feedData = {
+                    name: nameTextField.text,
+                    url: urlTextField.text,
+                    query: queryEditor.queryElements
+                };
+                if (feedId) {
+                    feedStore.save(feedId, feedData);
+                } else {
+                    feedStore.save(feedData);
                 }
             }
         }

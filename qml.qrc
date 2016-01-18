@@ -18,5 +18,8 @@
         <file>util.js</file>
         <file>HelpRegexPage.qml</file>
         <file>HelpButton.qml</file>
+        <file>TreeListView.qml</file>
+        <file>QueryEditor.qml</file>
+        <file>theme.js</file>
     </qresource>
 </RCC>
