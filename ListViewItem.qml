@@ -28,8 +28,8 @@ Item {
         id: rect
         anchors.fill: parent
         property string normalColour: "#f8f8f8"
-        property string hoverColour: "lightsteelblue"
-        property string pressedColour: "steelblue"
+        property string hoverColour: "#d8d8d8"
+        property string pressedColour: "#b8b8b8"
         color: normalColour
         border.color: "#e0e0e0"
         radius: 3
