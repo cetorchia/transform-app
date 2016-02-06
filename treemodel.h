@@ -18,6 +18,7 @@
 #ifndef TREEMODEL_H
 #define TREEMODEL_H
 
+#include <QVariant>
 #include <QStandardItemModel>
 
 /**
@@ -31,10 +32,12 @@ public:
     explicit TreeModel(QObject *parent = 0);
     virtual ~TreeModel();
 
+    Q_INVOKABLE QVariantList currentList();
 signals:
 
 public slots:
 private:
+    QModelIndex currentIndex;
 };
 
 #endif // TREEMODEL_H

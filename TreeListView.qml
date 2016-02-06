@@ -28,10 +28,13 @@ Item {
     property TreeModel model: TreeModel {
     }
     property ListModel listModel: ListModel {
-        ListElement {
-            name: "Document"
-            pathex: "/"
-        }
+    }
+    onModelChanged: {
+        listModel.clear();
+        var elements = model.currentList();
+        elements.forEach(function (element) {
+            listModel.append(element);
+        });
     }
     ColumnLayout {
         anchors.fill: parent
@@ -47,6 +50,7 @@ Item {
             Layout.fillHeight: true
             ListView {
                 id: listView
+                model: listModel
                 spacing: 2
                 delegate: ListViewItem {
                     RowLayout {
@@ -68,7 +72,6 @@ Item {
                         }
                     }
                 }
-                model: listModel
             }
         }
     }

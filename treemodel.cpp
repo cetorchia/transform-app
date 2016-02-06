@@ -19,14 +19,31 @@
 
 TreeModel::TreeModel(QObject *parent) : QStandardItemModel(parent)
 {
-    QStandardItem *a = new QStandardItem("a");
-    this->appendRow(a);
-    QStandardItem *b = new QStandardItem("b");
-    this->appendRow(b);
-    QStandardItem *c = new QStandardItem("c");
-    b->appendRow(c);
+    QStandardItem *root = new QStandardItem();
+    QVariantMap rootData
+    {
+        {"name", "Document"},
+        {"pathex", "/"}
+    };
+    root->setData(rootData);
+    appendRow(root);
 }
 
 TreeModel::~TreeModel()
 {
+}
+
+QVariantList TreeModel::currentList()
+{
+    QStandardItem *currentItem = itemFromIndex(currentIndex);
+    QVariantList list;
+    if (currentItem) {
+        for (int row = 0; row < currentItem->rowCount(); row++) {
+            list.append(currentItem->child(row)->data());
+        }
+    } else {
+        QStandardItem *root = item(0);
+        list.append(root->data());
+    }
+    return list;
 }
