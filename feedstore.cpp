@@ -89,8 +89,8 @@ bool FeedStore::validate(const QVariantMap& data) {
                 emit error("Field names are required.");
                 return false;
             }
-            if (pathex.isEmpty() && regex.isEmpty()) {
-                emit error("Path expression or regular expression is required.");
+            if (pathex.isEmpty()) {
+                emit error("Path expression is required.");
                 return false;
             }
             if (!regex.isEmpty() && !QRegularExpression(regex).isValid()) {
