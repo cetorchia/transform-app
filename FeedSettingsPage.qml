@@ -59,6 +59,7 @@ Page {
                 var feedData = response.data;
                 nameTextField.text = feedData.name;
                 urlTextField.text = feedData.url;
+                treeModel.loadFromUrl(urlTextField.text);
                 queryEditor.queryElements = feedData.query;
             }
         }
@@ -77,17 +78,7 @@ Page {
                 Layout.fillWidth: true
                 placeholderText: "URL (optional)"
                 onEditingFinished: {
-                    if (urlTextField.text) {
-                        var request = new XMLHttpRequest();
-                        request.open('GET', urlTextField.text);
-                        request.onreadystatechange = function(event) {
-                            if (request.readyState === XMLHttpRequest.DONE) {
-                                var data = request.responseText;
-                                // TODO: parse data and set tree view
-                            }
-                        }
-                        //request.send();
-                    }
+                    treeModel.loadFromUrl(urlTextField.text);
                 }
             }
             Button {
@@ -97,6 +88,9 @@ Page {
                 }
             }
         }
+        TreeParser {
+            id: treeParser
+        }
         TreeListView {
             id: treeListView
             visible: true
@@ -104,6 +98,20 @@ Page {
             Layout.fillHeight: true
             model: TreeModel {
                 id: treeModel
+                function loadFromUrl(url) {
+                    if (url) {
+                        var request = new XMLHttpRequest();
+                        request.open('GET', url);
+                        request.onreadystatechange = function(event) {
+                            if (request.readyState === XMLHttpRequest.DONE) {
+                                var data = request.responseText;
+                                var tree = treeParser.parseTree(data);
+                                load(tree);
+                            }
+                        }
+                        request.send();
+                    }
+                }
             }
             onSelectedElementChanged: {
                 if (selectedElement.hasChildren === false) {
