@@ -92,3 +92,51 @@ void TreeModel::goParent()
     emit currentItemDataChanged();
     emit currentListChanged();
 }
+
+void TreeModel::load(const QVariant& tree)
+{
+    clear();
+    QStandardItem *rootItem = createRootItem();
+    appendRow(rootItem);
+    load(tree, "/", rootItem);
+    if (tree.toList().isEmpty() && tree.toMap().isEmpty()) {
+        m_currentItem = invisibleRootItem();
+    } else {
+        m_currentItem = rootItem;
+    }
+    emit currentItemDataChanged();
+    emit currentListChanged();
+}
+
+void TreeModel::load(const QVariant& tree, const QString& pathex, QStandardItem *item)
+{
+    if (!tree.toList().isEmpty()) {
+        QVariantList list = tree.toList();
+        QString childPathex = pathex + "*/";
+        for (int i = 0; i < list.size(); i++) {
+            QStandardItem *childItem = new QStandardItem();
+            QVariantMap data
+            {
+                {"name", QString::number(i)},
+                {"pathex", childPathex}
+            };
+            childItem->setData(data);
+            item->appendRow(childItem);
+            load(list[i], childPathex, childItem);
+        }
+    } else if (!tree.toMap().isEmpty()) {
+        QVariantMap map = tree.toMap();
+        for (QString key: map.keys()) {
+            QStandardItem *childItem = new QStandardItem();
+            QString childPathex = pathex + key + "/";
+            QVariantMap data
+            {
+                {"name", key},
+                {"pathex", childPathex}
+            };
+            childItem->setData(data);
+            item->appendRow(childItem);
+            load(map[key], childPathex, childItem);
+        }
+    }
+}

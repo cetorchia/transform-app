@@ -39,12 +39,14 @@ public:
 
     Q_INVOKABLE void go(int childRow);
     Q_INVOKABLE void goParent();
+    Q_INVOKABLE void load(const QVariant& tree);
 signals:
     void currentItemDataChanged();
     void currentListChanged();
 public slots:
 protected:
     QStandardItem *createRootItem();
+    void load(const QVariant& tree, const QString& pathex, QStandardItem *item);
 private:
     QStandardItem *m_currentItem;
 };
