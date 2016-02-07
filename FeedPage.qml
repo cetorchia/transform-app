@@ -28,7 +28,7 @@ import "util.js" as Util
 Page {
     property var feedId
     property var feedData: ({})
-    title: "Feed"
+    title: feedData.name ? feedData.name : "Feed"
     FeedStore {
         id: feedStore
         onError: {
@@ -127,24 +127,6 @@ Page {
     }
     ColumnLayout {
         anchors.fill: parent
-        Label {
-            text: feedData.name
-            font.bold: true
-        }
-        RowLayout {
-            Label {
-                text: "URL:"
-                font.bold: true
-            }
-            Label {
-                text: feedData.url
-                font.family: "monospace"
-            }
-        }
-        Label {
-            text: "Data"
-            font.bold: true
-        }
         ColumnLayout {
             visible: (feedId && !feedData.url)
             Layout.fillWidth: true
