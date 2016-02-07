@@ -10,7 +10,9 @@ SOURCES += main.cpp \
     regextransformer.cpp \
     csvexporter.cpp \
     urlextractor.cpp \
-    treemodel.cpp
+    treemodel.cpp \
+    pathextransformer.cpp \
+    treeparser.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,6 +32,8 @@ HEADERS += \
     regextransformer.h \
     csvexporter.h \
     urlextractor.h \
-    treemodel.h
+    treemodel.h \
+    pathextransformer.h \
+    treeparser.h
 
 CONFIG += c++11

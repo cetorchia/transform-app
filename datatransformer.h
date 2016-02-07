@@ -22,6 +22,8 @@
 #include <QObject>
 #include <QVariant>
 
+#include "treeparser.h"
+#include "pathextransformer.h"
 #include "regextransformer.h"
 #include "urlextractor.h"
 
@@ -41,6 +43,8 @@ signals:
 public slots:
 private slots:
 protected:
+    TreeParser treeParser;
+    PathexTransformer pathexTransformer;
     RegexTransformer regexTransformer;
     UrlExtractor urlExtractor;
 private:

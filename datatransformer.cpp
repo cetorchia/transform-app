@@ -18,7 +18,6 @@
 #include <QUrl>
 
 #include "datatransformer.h"
-#include "feedstore.h"
 
 DataTransformer::DataTransformer(QObject *parent) : QObject(parent)
 {
@@ -45,14 +44,27 @@ void DataTransformer::transform(const QVariantMap& feedData, const QString& inDa
 {
     QStringList fields;
     QVariantList outData;
+    QVariant inTree = treeParser.parseTree(inData);
     for (QVariant var: feedData["query"].toList()) {
         QVariantMap queryElement = var.toMap();
-        if (!queryElement["regex"].toString().isEmpty()) {
-            QVariantMap response = regexTransformer.transform(queryElement, inData);
-            outData += response["data"].toList();
-        }
-        QString keyField = queryElement["key"].toString();
         QStringList queryFields = queryElement["fields"].toStringList();
+        QStringList inElementList = pathexTransformer.transform(queryElement, inTree);
+        if (!queryElement["regex"].toString().isEmpty()) {
+            for (QString inElementText: inElementList) {
+                QVariantMap response = regexTransformer.transform(queryElement, inElementText);
+                outData += response["data"].toList();
+            }
+        } else {
+            for (QString inElementText: inElementList) {
+                QVariantMap datum;
+                for (QString field: queryFields) {
+                    datum[field] = inElementText;
+                };
+                outData << datum;
+            }
+        }
+        // Maintain the list of field names
+        QString keyField = queryElement["key"].toString();
         if (!keyField.isEmpty()) {
             queryFields.removeOne(keyField);
             queryFields.insert(0, keyField);
