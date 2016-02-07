@@ -24,17 +24,8 @@ import Trees 1.0
 
 Item {
     id: treeListView
-    property var selectedElement
+    property var selectedElement: model.currentItemData
     property TreeModel model: TreeModel {
-    }
-    property ListModel listModel: ListModel {
-    }
-    onModelChanged: {
-        listModel.clear();
-        var elements = model.currentList();
-        elements.forEach(function (element) {
-            listModel.append(element);
-        });
     }
     ColumnLayout {
         anchors.fill: parent
@@ -50,7 +41,7 @@ Item {
             Layout.fillHeight: true
             ListView {
                 id: listView
-                model: listModel
+                model: treeListView.model.currentList
                 spacing: 2
                 delegate: ListViewItem {
                     RowLayout {
@@ -60,17 +51,16 @@ Item {
                             Layout.fillWidth: false
                             Label {
                                 Layout.leftMargin: 10
-                                text: name
+                                text: modelData.name
                                 font.bold: true
                             }
                         }
                     }
-                    onClicked: {
-                        selectedElement = {
-                            name: name,
-                            pathex: pathex
-                        }
-                    }
+                    onClicked: if (modelData.isParent) {
+                                   treeListView.model.goParent()
+                               } else {
+                                   treeListView.model.go(modelData.row);
+                               }
                 }
             }
         }

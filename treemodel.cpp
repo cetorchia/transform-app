@@ -19,31 +19,76 @@
 
 TreeModel::TreeModel(QObject *parent) : QStandardItemModel(parent)
 {
-    QStandardItem *root = new QStandardItem();
-    QVariantMap rootData
-    {
-        {"name", "Document"},
-        {"pathex", "/"}
-    };
-    root->setData(rootData);
-    appendRow(root);
+    QStandardItem *rootItem = createRootItem();
+    appendRow(rootItem);
+    m_currentItem = invisibleRootItem();
 }
 
 TreeModel::~TreeModel()
 {
 }
 
+QStandardItem *TreeModel::createRootItem()
+{
+    QStandardItem *rootItem = new QStandardItem();
+    QVariantMap rootData
+    {
+        {"name", "Document"},
+        {"pathex", "/"}
+    };
+    rootItem->setData(rootData);
+    return rootItem;
+}
+
+QVariantMap TreeModel::currentItemData()
+{
+    QStandardItem *currentItem = m_currentItem;
+    QVariantMap currentItemData = currentItem->data().toMap();
+    currentItemData["hasChildren"] = currentItem->hasChildren();
+    return currentItemData;
+}
+
 QVariantList TreeModel::currentList()
 {
-    QStandardItem *currentItem = itemFromIndex(currentIndex);
+    QStandardItem *currentItem = m_currentItem;
+    QStandardItem *parentItem = currentItem->parent();
     QVariantList list;
-    if (currentItem) {
-        for (int row = 0; row < currentItem->rowCount(); row++) {
-            list.append(currentItem->child(row)->data());
-        }
-    } else {
-        QStandardItem *root = item(0);
-        list.append(root->data());
+    if (parentItem) {
+        QVariantMap parentItemData
+        {
+            {"name", ".."},
+            {"isParent", true}
+        };
+        list << parentItemData;
+    }
+    for (int row = 0; row < currentItem->rowCount(); row++) {
+        QStandardItem *childItem = currentItem->child(row);
+        QVariantMap childItemData = childItem->data().toMap();
+        childItemData["row"] = childItem->row();
+        childItemData["hasChildren"] = childItem->hasChildren();
+        list << childItemData;
     }
     return list;
+}
+
+void TreeModel::go(int childRow)
+{
+    QStandardItem *currentItem = m_currentItem;
+    QStandardItem *childItem = currentItem->child(childRow);
+    m_currentItem = childItem;
+    emit currentItemDataChanged();
+    emit currentListChanged();
+}
+
+void TreeModel::goParent()
+{
+    QStandardItem *currentItem = m_currentItem;
+    QStandardItem *parentItem = currentItem->parent();
+    if (parentItem) {
+        m_currentItem = parentItem;
+    } else {
+        m_currentItem = invisibleRootItem();
+    }
+    emit currentItemDataChanged();
+    emit currentListChanged();
 }

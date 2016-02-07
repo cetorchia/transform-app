@@ -103,11 +103,12 @@ Page {
             Layout.fillWidth: true
             Layout.fillHeight: true
             model: TreeModel {
+                id: treeModel
             }
             onSelectedElementChanged: {
-                if (selectedElement) {
+                if (selectedElement.hasChildren === false) {
                     treeListView.visible = false;
-                    queryEditor.open(selectedElement);
+                    queryEditor.open(treeListView.selectedElement);
                 }
             }
         }
@@ -115,10 +116,12 @@ Page {
             id: queryEditor
             Layout.fillWidth: true
             Layout.fillHeight: true
-            onRejected: {
+            onAccepted: {
+                treeModel.goParent();
                 treeListView.visible = true;
             }
-            onAccepted: {
+            onRejected: {
+                treeModel.goParent();
                 treeListView.visible = true;
             }
         }

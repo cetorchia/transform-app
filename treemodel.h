@@ -28,16 +28,25 @@
 class TreeModel : public QStandardItemModel
 {
     Q_OBJECT
+    Q_PROPERTY(QVariantMap currentItemData READ currentItemData NOTIFY currentItemDataChanged)
+    Q_PROPERTY(QVariantList currentList READ currentList NOTIFY currentListChanged)
 public:
     explicit TreeModel(QObject *parent = 0);
     virtual ~TreeModel();
 
-    Q_INVOKABLE QVariantList currentList();
-signals:
+    QVariantMap currentItemData();
+    QVariantList currentList();
 
+    Q_INVOKABLE void go(int childRow);
+    Q_INVOKABLE void goParent();
+signals:
+    void currentItemDataChanged();
+    void currentListChanged();
 public slots:
+protected:
+    QStandardItem *createRootItem();
 private:
-    QModelIndex currentIndex;
+    QStandardItem *m_currentItem;
 };
 
 #endif // TREEMODEL_H
