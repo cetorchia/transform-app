@@ -18,7 +18,6 @@
 #ifndef DATATRANSFORMER_H
 #define DATATRANSFORMER_H
 
-#include <functional>
 #include <QObject>
 #include <QVariant>
 

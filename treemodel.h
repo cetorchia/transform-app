@@ -21,6 +21,9 @@
 #include <QVariant>
 #include <QStandardItemModel>
 
+#include "treeparser.h"
+#include "urlextractor.h"
+
 /**
  * I got the idea of using QStandardItemModel from here:
  * @see https://github.com/bvanderlaan/ImaginativeThinking_tutorials/blob/master/Qt/QtQuick_TreeView/MyTreeModel.hpp
@@ -40,15 +43,19 @@ public:
     Q_INVOKABLE void go(int childRow);
     Q_INVOKABLE void goParent();
     Q_INVOKABLE void load(const QVariant& tree);
+    Q_INVOKABLE void loadFromUrl(const QUrl& url);
 signals:
     void currentItemDataChanged();
     void currentListChanged();
+    void error(const QString& message);
 public slots:
 protected:
     QStandardItem *createRootItem();
     void load(const QVariant& tree, const QString& pathex, QStandardItem *item);
 private:
     QStandardItem *m_currentItem;
+    UrlExtractor urlExtractor;
+    TreeParser treeParser;
 };
 
 #endif // TREEMODEL_H

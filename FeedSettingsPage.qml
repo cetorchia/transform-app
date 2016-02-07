@@ -88,9 +88,6 @@ Page {
                 }
             }
         }
-        TreeParser {
-            id: treeParser
-        }
         TreeListView {
             id: treeListView
             visible: true
@@ -98,19 +95,10 @@ Page {
             Layout.fillHeight: true
             model: TreeModel {
                 id: treeModel
-                function loadFromUrl(url) {
-                    if (url) {
-                        var request = new XMLHttpRequest();
-                        request.open('GET', url);
-                        request.onreadystatechange = function(event) {
-                            if (request.readyState === XMLHttpRequest.DONE) {
-                                var data = request.responseText;
-                                var tree = treeParser.parseTree(data);
-                                load(tree);
-                            }
-                        }
-                        request.send();
-                    }
+                onError: {
+                    // TODO: toast message nicely
+                    errorMessageDialog.text = message;
+                    errorMessageDialog.open();
                 }
             }
             onSelectedElementChanged: {

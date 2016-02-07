@@ -15,6 +15,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <functional>
+
 #include "treemodel.h"
 
 TreeModel::TreeModel(QObject *parent) : QStandardItemModel(parent)
@@ -138,5 +140,21 @@ void TreeModel::load(const QVariant& tree, const QString& pathex, QStandardItem 
             item->appendRow(childItem);
             load(map[key], childPathex, childItem);
         }
+    }
+}
+
+void TreeModel::loadFromUrl(const QUrl& url)
+{
+    if (url.isValid()) {
+        urlExtractor.getFromUrl(url);
+        connect(&urlExtractor, &UrlExtractor::finished, [=](const QString& inData) {
+            QVariant tree = treeParser.parseTree(inData);
+            load(tree);
+        });
+        connect(&urlExtractor, &UrlExtractor::error, [=](const QString& message) {
+            emit error(message);
+        });
+    } else {
+        emit error("Invalid URL");
     }
 }
