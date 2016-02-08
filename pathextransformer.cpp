@@ -25,12 +25,50 @@ PathexTransformer::PathexTransformer(QObject *parent) : QObject(parent)
 QStringList PathexTransformer::transform(const QVariantMap& queryElement, const QVariant& inTree)
 {
     if (queryElement["pathex"].toString() == "/") {
-        QStringList list
+        QStringList outElementList
         {
             inTree.toString()
         };
-        return list;
+        return outElementList;
     } else {
-        return QStringList();
+        QStringList pathElements = queryElement["pathex"].toString().split("/", QString::SkipEmptyParts);
+        QVariant element = inTree;
+        return transform(pathElements, element);
+    }
+}
+
+QStringList PathexTransformer::transform(const QStringList& pathElements, const QVariant& element)
+{
+    if (pathElements.size() > 0) {
+        QString pathElement = pathElements[0];
+        if (!element.toMap().isEmpty()) {
+            QVariantMap map = element.toMap();
+            if (map.contains(pathElement)) {
+                QStringList newPathElements = pathElements;
+                newPathElements.removeFirst();
+                return transform(newPathElements, map[pathElement]);
+            } else {
+                return QStringList();
+            }
+        } else if (!element.toList().isEmpty()) {
+            QStringList outElementList;
+            if (pathElement == "*") {
+                QVariantList list = element.toList();
+                QStringList newPathElements = pathElements;
+                newPathElements.removeFirst();
+                for (QVariant subElement: list) {
+                    outElementList << transform(newPathElements, subElement);
+                }
+            }
+            return outElementList;
+        } else {
+            return QStringList();
+        }
+    } else {
+        QStringList outElementList
+        {
+            element.toString()
+        };
+        return outElementList;
     }
 }

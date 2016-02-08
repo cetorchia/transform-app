@@ -28,6 +28,7 @@ public:
     explicit PathexTransformer(QObject *parent = 0);
 
     QStringList transform(const QVariantMap& queryElement, const QVariant& inTree);
+    QStringList transform(const QStringList& pathElements, const QVariant& element);
 signals:
 
 public slots:
