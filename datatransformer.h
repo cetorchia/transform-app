@@ -42,11 +42,13 @@ signals:
 public slots:
 private slots:
 protected:
+private:
     TreeParser treeParser;
     PathexTransformer pathexTransformer;
     RegexTransformer regexTransformer;
     UrlExtractor urlExtractor;
-private:
+    QList<QVariantMap> flatten(const QMap<QString, QList<QVariantMap>>& map);
+    QVariantList toVariantList(const QList<QVariantMap>& dataList);
 };
 
 #endif // DATATRANSFORMER_H

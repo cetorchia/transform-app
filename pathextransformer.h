@@ -27,11 +27,17 @@ class PathexTransformer : public QObject
 public:
     explicit PathexTransformer(QObject *parent = 0);
 
-    QStringList transform(const QVariantMap& queryElement, const QVariant& inTree);
-    QStringList transform(const QStringList& pathElements, const QVariant& element);
+    QMap<QString, QString> transform(const QVariantMap& queryElement, const QVariant& inTree);
+    QMap<QString, QString> transform(const QStringList& queryPathComponents, const QString& elementPath, const QVariant& element);
+    void addElementData(QMap<QString, QList<QVariantMap>>& outDataMap,
+                        const QVariantMap& queryElement,
+                        const QMap<QString, QList<QVariantMap>>& newElementDataMap);
 signals:
 
 public slots:
+private:
+    QStringList pathComponents(const QString& pathex);
+    QString elementKey(const QStringList& queryPathComponents, const QString& elementPath);
 };
 
 #endif // PATHEXTRANSFORMER_H

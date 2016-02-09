@@ -22,53 +22,113 @@ PathexTransformer::PathexTransformer(QObject *parent) : QObject(parent)
 
 }
 
-QStringList PathexTransformer::transform(const QVariantMap& queryElement, const QVariant& inTree)
+QMap<QString, QString> PathexTransformer::transform(const QVariantMap& queryElement, const QVariant& inTree)
 {
     if (queryElement["pathex"].toString() == "/") {
-        QStringList outElementList
+        QMap<QString, QString> outElementMap
         {
-            inTree.toString()
+            {"/", inTree.toString()}
         };
-        return outElementList;
+        return outElementMap;
     } else {
-        QStringList pathElements = queryElement["pathex"].toString().split("/", QString::SkipEmptyParts);
+        QStringList queryPathComponents = this->pathComponents(queryElement["pathex"].toString());
         QVariant element = inTree;
-        return transform(pathElements, element);
+        return transform(queryPathComponents, "/", element);
     }
 }
 
-QStringList PathexTransformer::transform(const QStringList& pathElements, const QVariant& element)
+QMap<QString, QString> PathexTransformer::transform(const QStringList& queryPathComponents,
+                                                    const QString& elementPath,
+                                                    const QVariant& element)
 {
-    if (pathElements.size() > 0) {
-        QString pathElement = pathElements[0];
+    if (queryPathComponents.size() > 0) {
+        QString queryPathComponent = queryPathComponents[0];
         if (!element.toMap().isEmpty()) {
             QVariantMap map = element.toMap();
-            if (map.contains(pathElement)) {
-                QStringList newPathElements = pathElements;
-                newPathElements.removeFirst();
-                return transform(newPathElements, map[pathElement]);
+            if (map.contains(queryPathComponent)) {
+                QStringList newQueryPathComponents = queryPathComponents;
+                newQueryPathComponents.removeFirst();
+                QString newElementPath = elementPath + queryPathComponent + "/";
+                return transform(newQueryPathComponents, newElementPath, map[queryPathComponent]);
             } else {
-                return QStringList();
+                return QMap<QString, QString>();
             }
         } else if (!element.toList().isEmpty()) {
-            QStringList outElementList;
-            if (pathElement == "*") {
+            QMap<QString, QString> outElementMap;
+            if (queryPathComponent == "*") {
                 QVariantList list = element.toList();
-                QStringList newPathElements = pathElements;
-                newPathElements.removeFirst();
-                for (QVariant subElement: list) {
-                    outElementList << transform(newPathElements, subElement);
+                QStringList newQueryPathComponents = queryPathComponents;
+                newQueryPathComponents.removeFirst();
+                for (int i = 0; i < list.size(); i++) {
+                    QVariant newElement = list[i];
+                    QString newElementPath = elementPath + QString::number(i) + "/";
+                    QMap<QString, QString> newElementMap = transform(newQueryPathComponents, newElementPath, newElement);
+                    outElementMap.unite(newElementMap);
                 }
             }
-            return outElementList;
+            return outElementMap;
         } else {
-            return QStringList();
+            return QMap<QString, QString>();
         }
     } else {
-        QStringList outElementList
+        QMap<QString, QString> outElementMap
         {
-            element.toString()
+            {elementPath, element.toString()}
         };
-        return outElementList;
+        return outElementMap;
     }
+}
+
+void PathexTransformer::addElementData(QMap<QString, QList<QVariantMap>>& outDataMap,
+                                       const QVariantMap& queryElement,
+                                       const QMap<QString, QList<QVariantMap>>& newElementDataMap)
+{
+    if (queryElement["pathex"].toString() == "/") {
+        outDataMap = newElementDataMap;
+    } else {
+        QStringList queryPathComponents = this->pathComponents(queryElement["pathex"].toString());
+        for (QString elementPath: newElementDataMap.keys()) {
+            QList<QVariantMap> newElementDataList = newElementDataMap[elementPath];
+            QString elementKey = this->elementKey(queryPathComponents, elementPath);
+            if (!outDataMap.contains(elementKey)) {
+                outDataMap[elementKey] = newElementDataList;
+            } else {
+                QList<QVariantMap> elementDataList = outDataMap[elementKey];
+                QList<QVariantMap> outElementDataList;
+                for (QVariantMap datum: elementDataList) {
+                    for (QVariantMap newDatum: newElementDataList) {
+                        QVariantMap outDatum = datum;
+                        outDatum.unite(newDatum);
+                        outElementDataList << outDatum;
+                    }
+                }
+                outDataMap[elementKey] = outElementDataList;
+            }
+        }
+    }
+}
+
+QStringList PathexTransformer::pathComponents(const QString& pathex)
+{
+    QStringList pathComponents = pathex.split("/", QString::SkipEmptyParts);
+    return pathComponents;
+}
+
+QString PathexTransformer::elementKey(const QStringList& queryPathComponents, const QString& elementPath)
+{
+    QStringList elementPathComponents = this->pathComponents(elementPath);
+    for (int i = elementPathComponents.size() - 1; i >= 0; i--) {
+        if (queryPathComponents[i] == "*") {
+            break;
+        } else {
+            elementPathComponents.removeAt(i);
+        }
+    }
+    QString elementKey;
+    if (elementPathComponents.size() == 0) {
+        elementKey = "/";
+    } else {
+        elementKey = "/" + elementPathComponents.join("/") + "/";
+    }
+    return elementKey;
 }

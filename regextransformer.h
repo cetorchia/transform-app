@@ -27,12 +27,12 @@ class RegexTransformer : public QObject
 public:
     explicit RegexTransformer(QObject *parent = 0);
 
-    QVariantMap transform(const QVariantMap& queryElement, const QString& inData);
+    QList<QVariantMap> transform(const QVariantMap& queryElement, const QString& inData);
 signals:
 
 public slots:
 private:
-    void matchData(QVariantList& outData, const QRegularExpression& re, const QStringList& fields, const QString& inData);
+    void matchData(QList<QVariantMap>& outData, const QRegularExpression& re, const QStringList& fields, const QString& inData);
 };
 
 #endif // REGEXTRANSFORMER_H

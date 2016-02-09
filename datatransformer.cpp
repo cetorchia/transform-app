@@ -44,26 +44,35 @@ void DataTransformer::transform(const QVariantMap& feedData)
 void DataTransformer::transform(const QVariantMap& feedData, const QString& inData)
 {
     QStringList fields;
-    QVariantList outData;
     QVariant inTree = treeParser.parseTree(inData);
+    QMap<QString, QList<QVariantMap>> outDataMap;
     for (QVariant var: feedData["query"].toList()) {
         QVariantMap queryElement = var.toMap();
         QStringList queryFields = queryElement["fields"].toStringList();
-        QStringList inElementList = pathexTransformer.transform(queryElement, inTree);
+        QMap<QString, QString> inElementMap = pathexTransformer.transform(queryElement, inTree);
+        QVariantMap myMap;
+        for (QString myKey: inElementMap.keys()) {
+            myMap[myKey] = inElementMap[myKey];
+        }
+        QMap<QString, QList<QVariantMap>> outElementDataMap;
         if (!queryElement["regex"].toString().isEmpty()) {
-            for (QString inElementText: inElementList) {
-                QVariantMap response = regexTransformer.transform(queryElement, inElementText);
-                outData += response["data"].toList();
+            for (QString elementPath: inElementMap.keys()) {
+                QString inElementText = inElementMap[elementPath];
+                QList<QVariantMap> innerDataList = regexTransformer.transform(queryElement, inElementText);
+                outElementDataMap[elementPath] = innerDataList;
             }
         } else {
-            for (QString inElementText: inElementList) {
+            for (QString elementPath: inElementMap.keys()) {
+                QString inElementText = inElementMap[elementPath];
                 QVariantMap datum;
                 for (QString field: queryFields) {
                     datum[field] = inElementText;
-                };
-                outData << datum;
+                }
+                QList<QVariantMap> innerDataList {datum};
+                outElementDataMap[elementPath] = innerDataList;
             }
         }
+        pathexTransformer.addElementData(outDataMap, queryElement, outElementDataMap);
         // Maintain the list of field names
         QString keyField = queryElement["key"].toString();
         if (!keyField.isEmpty()) {
@@ -76,5 +85,26 @@ void DataTransformer::transform(const QVariantMap& feedData, const QString& inDa
             }
         }
     }
+    QList<QVariantMap> outDataList = flatten(outDataMap);
+    QVariantList outData = toVariantList(outDataList);
     emit finished(fields, outData);
+}
+
+QList<QVariantMap> DataTransformer::flatten(const QMap<QString, QList<QVariantMap>>& dataMap)
+{
+    QList<QVariantMap> outList;
+    for (QString key: dataMap.keys()) {
+        QList<QVariantMap> dataList = dataMap[key];
+        outList += dataList;
+    }
+    return outList;
+}
+
+QVariantList DataTransformer::toVariantList(const QList<QVariantMap>& dataList)
+{
+    QVariantList variantList;
+    for (QVariantMap datum: dataList) {
+        variantList << datum;
+    }
+    return variantList;
 }

@@ -24,11 +24,11 @@ RegexTransformer::RegexTransformer(QObject *parent) : QObject(parent)
 
 }
 
-QVariantMap RegexTransformer::transform(const QVariantMap& queryElement, const QString& inData)
+QList<QVariantMap> RegexTransformer::transform(const QVariantMap& queryElement, const QString& inData)
 {
     QRegularExpression re(queryElement["regex"].toString(),
             QRegularExpression::MultilineOption);
-    QVariantList outData;
+    QList<QVariantMap> outData;
     QString keyField = queryElement["key"].toString();
     QString keyRegex = queryElement["keyRegex"].toString();
     QStringList fields = queryElement["fields"].toStringList();
@@ -42,10 +42,9 @@ QVariantMap RegexTransformer::transform(const QVariantMap& queryElement, const Q
                 QRegularExpressionMatch match = i.next();
                 QString keyValue = match.captured();
                 QString inSubData = inDataLists[j];
-                QVariantList outSubData;
+                QList<QVariantMap> outSubData;
                 matchData(outSubData, re, fields, inSubData);
-                for (QVariant var: outSubData) {
-                    QVariantMap datum = var.toMap();
+                for (QVariantMap datum: outSubData) {
                     datum[keyField] = keyValue;
                     outData << datum;
                 }
@@ -56,15 +55,10 @@ QVariantMap RegexTransformer::transform(const QVariantMap& queryElement, const Q
     } else {
         matchData(outData, re, fields, inData);
     }
-    QVariantMap response
-    {
-        {"fields", fields},
-        {"data", outData}
-    };
-    return response;
+    return outData;
 }
 
-void RegexTransformer::matchData(QVariantList& outData, const QRegularExpression& re, const QStringList& fields, const QString& inData)
+void RegexTransformer::matchData(QList<QVariantMap>& outData, const QRegularExpression& re, const QStringList& fields, const QString& inData)
 {
     QRegularExpressionMatchIterator i = re.globalMatch(inData);
     while (i.hasNext()) {
