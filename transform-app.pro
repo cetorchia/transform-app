@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets sql network
+QT += qml quick widgets sql network xml
 
 SOURCES += main.cpp \
     database.cpp \

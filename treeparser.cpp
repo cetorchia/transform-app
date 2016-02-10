@@ -27,10 +27,61 @@ TreeParser::TreeParser(QObject *parent) : QObject(parent)
 QVariant TreeParser::parseTree(const QString& inData)
 {
     QJsonParseError error;
-    QJsonDocument doc = QJsonDocument::fromJson(inData.toUtf8(), &error);
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(inData.toUtf8(), &error);
     if (!error.error) {
-        return doc.toVariant();
+        return jsonDoc.toVariant();
+    }
+    QDomDocument xmlDoc;
+    xmlDoc.setContent(inData);
+    if (!xmlDoc.isNull()) {
+        return toVariant(xmlDoc.documentElement());
+    }
+    return inData;
+}
+
+QVariant TreeParser::toVariant(const QDomElement& domElement)
+{
+    bool hasChildElements = !domElement.firstChildElement().isNull();
+    if (hasChildElements || domElement.hasAttributes()) {
+        QVariantMap elementMap;
+        QDomNamedNodeMap attributes = domElement.attributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            QDomAttr domAttr = attributes.item(i).toAttr();
+            QString name = "@" + domAttr.name();
+            QString value = domAttr.value();
+            elementMap[name] = value;
+        }
+        QDomNode node = domElement.firstChild();
+        while (!node.isNull()) {
+            if (node.isText()) {
+                QDomText domText = node.toText();
+                QString name = "text";
+                QString value = domText.data();
+                elementMap[name] = value;
+            } else if (node.isElement()) {
+                QDomElement childDomElement = node.toElement();
+                QString name = childDomElement.tagName();
+                if (!elementMap.contains(name)) {
+                    elementMap[name] = toVariant(childDomElement);
+                } else if (elementMap[name].toList().isEmpty()){
+                    QVariantList elementList
+                    {
+                        elementMap[name],
+                        toVariant(childDomElement)
+                    };
+                    elementMap[name] = elementList;
+                } else {
+                    QVariantList elementList = elementMap[name].toList();
+                    elementList << toVariant(childDomElement);
+                    elementMap[name] = elementList;
+                }
+            }
+            node = node.nextSibling();
+        }
+        return elementMap;
+    } else if (!domElement.text().isEmpty()) {
+        return domElement.text();
     } else {
-        return inData;
+        return QVariant();
     }
 }

@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QVariant>
+#include <QDomDocument>
 
 class TreeParser : public QObject
 {
@@ -31,6 +32,8 @@ public:
 signals:
 
 public slots:
+private:
+    QVariant toVariant(const QDomElement& domElement);
 };
 
 #endif // TREEPARSER_H
