@@ -49,13 +49,14 @@ signals:
     void currentListChanged();
     void error(const QString& message);
 public slots:
-protected:
-    QStandardItem *createRootItem();
-    void load(const QVariant& tree, const QString& pathex, QStandardItem *item);
 private:
     QStandardItem *m_currentItem;
     UrlExtractor urlExtractor;
     TreeParser treeParser;
+
+    QStandardItem *createRootItem(const QVariant &value = QVariant());
+    void load(const QVariant& tree, const QString& pathex, QStandardItem *item);
+    QString excerpt(const QVariant& element);
 };
 
 #endif // TREEMODEL_H

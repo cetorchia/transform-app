@@ -30,13 +30,14 @@ TreeModel::~TreeModel()
 {
 }
 
-QStandardItem *TreeModel::createRootItem()
+QStandardItem *TreeModel::createRootItem(const QVariant& value)
 {
     QStandardItem *rootItem = new QStandardItem();
     QVariantMap rootData
     {
         {"name", "Document"},
-        {"pathex", "/"}
+        {"pathex", "/"},
+        {"value", excerpt(value)}
     };
     rootItem->setData(rootData);
     return rootItem;
@@ -98,7 +99,7 @@ void TreeModel::goParent()
 void TreeModel::load(const QVariant& tree)
 {
     clear();
-    QStandardItem *rootItem = createRootItem();
+    QStandardItem *rootItem = createRootItem(tree);
     appendRow(rootItem);
     load(tree, "/", rootItem);
     if (tree.toList().isEmpty() && tree.toMap().isEmpty()) {
@@ -120,7 +121,8 @@ void TreeModel::load(const QVariant& tree, const QString& pathex, QStandardItem 
             QVariantMap data
             {
                 {"name", QString::number(i)},
-                {"pathex", childPathex}
+                {"pathex", childPathex},
+                {"value", excerpt(list[i])}
             };
             childItem->setData(data);
             item->appendRow(childItem);
@@ -134,7 +136,8 @@ void TreeModel::load(const QVariant& tree, const QString& pathex, QStandardItem 
             QVariantMap data
             {
                 {"name", key},
-                {"pathex", childPathex}
+                {"pathex", childPathex},
+                {"value", excerpt(map[key])}
             };
             childItem->setData(data);
             item->appendRow(childItem);
@@ -156,5 +159,34 @@ void TreeModel::loadFromUrl(const QUrl& url)
         });
     } else {
         emit error("Invalid URL");
+    }
+}
+
+QString TreeModel::excerpt(const QVariant& element)
+{
+    QString text = element.toString();
+    if (text.isEmpty()) {
+        return text;
+    } else {
+        QStringList words = text.split(QRegExp("\\s+"), QString::SkipEmptyParts);
+        QString excerpt;
+        for (QString word: words) {
+            if (excerpt.isEmpty()) {
+                if (word.size() > 100) {
+                    excerpt = word.left(100);
+                } else {
+                    excerpt = word;
+                }
+            } else if ((excerpt + " " + word).size() <= 100) {
+                excerpt += " " + word;
+            } else {
+                break;
+            }
+        }
+        if (excerpt.size() < text.size()) {
+            return excerpt + "...";
+        } else {
+            return excerpt;
+        }
     }
 }

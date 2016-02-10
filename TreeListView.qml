@@ -54,6 +54,11 @@ Item {
                                 text: modelData.name
                                 font.bold: true
                             }
+                            Label {
+                                visible: (modelData.value ? true : false)
+                                Layout.leftMargin: 10
+                                text: modelData.value ? modelData.value : ""
+                            }
                         }
                     }
                     onClicked: if (modelData.isParent) {
