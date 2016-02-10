@@ -33,7 +33,8 @@ QVariant TreeParser::parseTree(const QString& inData)
     }
     QDomDocument xmlDoc;
     xmlDoc.setContent(inData);
-    if (!xmlDoc.isNull()) {
+    QDomDocumentType xmlDocType = xmlDoc.doctype();
+    if (!xmlDoc.isNull() && xmlDocType.name() != "html") {
         return toVariant(xmlDoc.documentElement());
     }
     return inData;
