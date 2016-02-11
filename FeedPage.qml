@@ -71,10 +71,13 @@ Page {
             errorMessageDialog.text = message;
             errorMessageDialog.open();
         }
-        onFinished: {
-            var transformedData = outData;
-            var fields = outFields;
-            if (transformedData.length > 0) {
+        onDataChanged: {
+            if (data.length === 0) {
+                noResultsMessageDialog.open();
+            }
+        }
+        onFieldsChanged: {
+            if (fields.length > 0) {
                 for (var i = tableView.columnCount - 1; i >= 0; i--) {
                     tableView.removeColumn(i);
                 }
@@ -87,21 +90,10 @@ Page {
                                                                                 });
                     tableView.addColumn(tableViewColumn);
                 });
-                transformedDataListModel.clear();
-                transformedData.forEach(function(object) {
-                    var escapedObject = Util.escapeObject(object);
-                    transformedDataListModel.append(escapedObject);
-                });
-                csvExporter.fields = fields;
-                csvExporter.data = transformedData;
-            } else {
-                noResultsMessageDialog.open();
             }
         }
     }
-    ListModel {
-        id: transformedDataListModel
-    }
+    property var transformedData: dataTransformer.escapedData
     MessageDialog {
         id: noResultsMessageDialog
         title: "No results"
@@ -111,6 +103,8 @@ Page {
     CsvExporter {
         id: csvExporter
         filename: feedData.name + ".csv"
+        fields: dataTransformer.fields
+        data: dataTransformer.data
         onFinished: {
             csvExportMessageDialog.text = "Data written to " + path
             csvExportMessageDialog.open();
@@ -148,10 +142,10 @@ Page {
             }
         }
         RowLayout {
-            visible: (feedId && !feedData.url) || (transformedDataListModel.count > 0)
+            visible: (feedId && !feedData.url) || (transformedData.length > 0)
             Layout.fillWidth: true
             Button {
-                text: (transformedDataListModel.count === 0) ? "Go" : "Reload"
+                text: (transformedData.length === 0) ? "Go" : "Reload"
                 onClicked: {
                     doTransform();
                 }
@@ -176,8 +170,8 @@ Page {
             Layout.fillHeight: true
             TableView {
                 id: tableView
-                visible: (transformedDataListModel.count > 0)
-                model: transformedDataListModel
+                visible: (transformedData.length > 0)
+                model: transformedData
                 anchors.fill: parent
                 Component {
                     id: tableViewColumnComponent
@@ -185,19 +179,9 @@ Page {
                     }
                 }
                 onClicked: {
-                    var datum = transformedDataListModel.get(row);
-                    var urlRegexp = /^<a href="(https?:\/\/.*)">.*<\/a>$/;
-                    var url = Object.keys(datum).reduce(function(url, field) {
-                        if (!url && urlRegexp.test(datum[field])) {
-                            var match = urlRegexp.exec(datum[field])
-                            var newUrl = match[1];
-                            return newUrl;
-                        } else {
-                            return url;
-                        }
-                    }, null);
-                    if (url) {
-                        Qt.openUrlExternally(url);
+                    var datum = transformedData[row];
+                    if (datum.__url) {
+                        Qt.openUrlExternally(datum.__url);
                     }
                 }
             }

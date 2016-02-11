@@ -29,6 +29,9 @@
 class DataTransformer : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QStringList fields MEMBER m_fields NOTIFY fieldsChanged)
+    Q_PROPERTY(QVariantList data MEMBER m_data NOTIFY dataChanged)
+    Q_PROPERTY(QVariantList escapedData MEMBER m_escapedData NOTIFY escapedDataChanged)
 public:
     explicit DataTransformer(QObject *parent = 0);
 
@@ -36,12 +39,18 @@ public:
     Q_INVOKABLE void transform(const QVariantMap& feedData);
 
 signals:
-    void finished(const QStringList& outFields, const QVariantList& outData);
     void error(const QString& message);
+    void fieldsChanged();
+    void dataChanged();
+    void escapedDataChanged();
 
 public slots:
 private slots:
+    void escapeData();
 protected:
+    QStringList m_fields;
+    QVariantList m_data;
+    QVariantList m_escapedData;
 private:
     TreeParser treeParser;
     PathexTransformer pathexTransformer;

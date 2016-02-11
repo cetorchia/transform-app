@@ -28,7 +28,7 @@ class TreeParser : public QObject
 public:
     explicit TreeParser(QObject *parent = 0);
 
-    Q_INVOKABLE QVariant parseTree(const QString& inData);
+    QVariant parseTree(const QString& inData);
 signals:
 
 public slots:

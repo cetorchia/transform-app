@@ -22,7 +22,7 @@
 
 DataTransformer::DataTransformer(QObject *parent) : QObject(parent)
 {
-
+    connect(this, &DataTransformer::dataChanged, &DataTransformer::escapeData);
 }
 
 void DataTransformer::transform(const QVariantMap& feedData)
@@ -87,7 +87,10 @@ void DataTransformer::transform(const QVariantMap& feedData, const QString& inDa
     }
     QList<QVariantMap> outDataList = flatten(outDataMap);
     QVariantList outData = toVariantList(outDataList);
-    emit finished(fields, outData);
+    m_fields = fields;
+    m_data = outData;
+    emit fieldsChanged();
+    emit dataChanged();
 }
 
 QList<QVariantMap> DataTransformer::flatten(const QMap<QString, QList<QVariantMap>>& dataMap)
@@ -107,4 +110,38 @@ QVariantList DataTransformer::toVariantList(const QList<QVariantMap>& dataList)
         variantList << datum;
     }
     return variantList;
+}
+
+void DataTransformer::escapeData()
+{
+    QVariantList outData;
+    for (QVariant var: m_data) {
+        QVariantMap datum = var.toMap();
+        QUrl firstUrl;
+        for (QString field: datum.keys()) {
+            QUrl url = datum[field].toUrl();
+            if (url.isValid() && (url.scheme() == "http" || url.scheme() == "https")) {
+                QString str = "<a href=\"" + url.toString() + "\">" + url.toString() + "</a>";
+                datum[field] = str;
+                if (firstUrl.isEmpty()) {
+                    firstUrl = url;
+                }
+            } else {
+                QString str = datum[field].toString();
+                if (!str.isEmpty()) {
+                    str.replace("\"", "&quot;");
+                    str.replace("&", "&amp;");
+                    str.replace("<", "&lt;");
+                    str.replace(">", "&gt;");
+                    datum[field] = str;
+                }
+            }
+        }
+        if (!firstUrl.isEmpty()) {
+            datum["__url"] = firstUrl.toString();
+        }
+        outData << datum;
+    }
+    m_escapedData = outData;
+    emit escapedDataChanged();
 }
