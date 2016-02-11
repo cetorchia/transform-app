@@ -23,8 +23,6 @@ import Feeds 1.0
 import Transformation 1.0
 import Export 1.0
 
-import "util.js" as Util
-
 Page {
     property var feedId
     property var feedData: ({})
