@@ -24,6 +24,7 @@
 #include "datatransformer.h"
 #include "csvexporter.h"
 #include "treemodel.h"
+#include "queryelementlistmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<DataTransformer>("Transformation", 1, 0, "DataTransformer");
     qmlRegisterType<CsvExporter>("Export", 1, 0, "CsvExporter");
     qmlRegisterType<TreeModel>("Trees", 1, 0, "TreeModel");
+    qmlRegisterType<QueryElementListModel>("Feeds", 1, 0, "QueryElementListModel");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

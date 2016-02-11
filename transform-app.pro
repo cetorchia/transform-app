@@ -12,7 +12,8 @@ SOURCES += main.cpp \
     urlextractor.cpp \
     treemodel.cpp \
     pathextransformer.cpp \
-    treeparser.cpp
+    treeparser.cpp \
+    queryelementlistmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -34,6 +35,7 @@ HEADERS += \
     urlextractor.h \
     treemodel.h \
     pathextransformer.h \
-    treeparser.h
+    treeparser.h \
+    queryelementlistmodel.h
 
 CONFIG += c++11

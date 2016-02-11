@@ -19,6 +19,7 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
+import Feeds 1.0
 
 import "theme.js" as Theme
 
@@ -26,59 +27,26 @@ Item {
     id: queryEditor
     signal accepted
     signal rejected
-    property var queryElements: []
-    visible: false
-    function findExistingQueryElement(pathex) {
-        for (var i = 0; i < queryElements.length; i++) {
-            if (queryElements[i].pathex === pathex) {
-                return queryElements[i];
-            }
-        }
-        return null;
+    property QueryElementListModel queryElementListModel: QueryElementListModel {
     }
+    visible: false
     function open(selectedElement) {
-        var existingQueryElement = findExistingQueryElement(selectedElement.pathex);
-        var queryElement;
-        if (existingQueryElement) {
-            queryElement = existingQueryElement;
-        } else {
-            queryElement = {
-                pathex: selectedElement.pathex,
-                fields: [selectedElement.name],
-                regex: "",
-                key: "",
-                keyRegex: ""
-            };
-        }
+        var queryElement = queryElementListModel.get(selectedElement.pathex, selectedElement.name);
         pathexTextField.text = queryElement.pathex;
-        fieldsTextField.text = queryElement.fields.join(", ");
+        fieldsTextField.text = queryElement.fields;
         regexTextField.text = queryElement.regex;
         keyTextField.text = queryElement.key;
         keyRegexTextField.text = queryElement.keyRegex;
         queryEditor.visible = true;
     }
     function save() {
-        var fields;
-        if (fieldsTextField.text) {
-            fields = fieldsTextField.text.split(/\s*,\s*/);
-        } else {
-            fields = [];
-        }
-        var queryElement = {
-            pathex: pathexTextField.text,
-            fields: fields,
-            regex: regexTextField.text,
-            key: keyTextField.text,
-            keyRegex: keyRegexTextField.text
-        };
-        var existingQueryElement = findExistingQueryElement(pathexTextField.text);
-        if (existingQueryElement) {
-            for (var field in queryElement) {
-                existingQueryElement[field] = queryElement[field];
-            }
-        } else {
-            queryElements.push(queryElement);
-        }
+        queryElementListModel.put(
+                    pathexTextField.text,
+                    fieldsTextField.text,
+                    regexTextField.text,
+                    keyTextField.text,
+                    keyRegexTextField.text
+                    );
     }
     Rectangle {
         anchors.fill: parent

@@ -60,7 +60,7 @@ Page {
                 nameTextField.text = feedData.name;
                 urlTextField.text = feedData.url;
                 treeModel.loadFromUrl(urlTextField.text);
-                queryEditor.queryElements = feedData.query;
+                queryEditor.queryElementListModel.queryElements = feedData.query;
             }
         }
     }
@@ -132,7 +132,7 @@ Page {
                 var feedData = {
                     name: nameTextField.text,
                     url: urlTextField.text,
-                    query: queryEditor.queryElements
+                    query: queryEditor.queryElementListModel.queryElements
                 };
                 if (feedId) {
                     feedStore.save(feedId, feedData);
