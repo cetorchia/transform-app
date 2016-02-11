@@ -19,7 +19,13 @@ function escapeObject(object) {
     var escapedObject = {};
     Object.keys(object).forEach(function (field) {
         if (typeof object[field] === "string") {
-            escapedObject[field] = htmlEntities(object[field]);
+            var str = object[field];
+            var isUrl = (/^https?:\/\//.test(str) ? true : false);
+            if (isUrl) {
+                escapedObject[field] = "<a href=\"" + str + "\">" + str + "</a>";
+            } else {
+                escapedObject[field] = htmlEntities(str);
+            }
         }
     });
     return escapedObject;

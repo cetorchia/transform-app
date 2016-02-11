@@ -184,6 +184,22 @@ Page {
                     TableViewColumn {
                     }
                 }
+                onClicked: {
+                    var datum = transformedDataListModel.get(row);
+                    var urlRegexp = /^<a href="(https?:\/\/.*)">.*<\/a>$/;
+                    var url = Object.keys(datum).reduce(function(url, field) {
+                        if (!url && urlRegexp.test(datum[field])) {
+                            var match = urlRegexp.exec(datum[field])
+                            var newUrl = match[1];
+                            return newUrl;
+                        } else {
+                            return url;
+                        }
+                    }, null);
+                    if (url) {
+                        Qt.openUrlExternally(url);
+                    }
+                }
             }
         }
     }
