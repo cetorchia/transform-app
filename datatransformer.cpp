@@ -125,10 +125,10 @@ void DataTransformer::escapeData()
             } else {
                 QString str = datum[field].toString();
                 if (!str.isEmpty()) {
-                    str.replace("\"", "&quot;");
                     str.replace("&", "&amp;");
                     str.replace("<", "&lt;");
                     str.replace(">", "&gt;");
+                    str.replace("\"", "&quot;");
                     datum[field] = str;
                 }
             }
