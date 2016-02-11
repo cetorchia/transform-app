@@ -50,10 +50,6 @@ void DataTransformer::transform(const QVariantMap& feedData, const QString& inDa
         QVariantMap queryElement = var.toMap();
         QStringList queryFields = queryElement["fields"].toStringList();
         QMap<QString, QString> inElementMap = pathexTransformer.transform(queryElement, inTree);
-        QVariantMap myMap;
-        for (QString myKey: inElementMap.keys()) {
-            myMap[myKey] = inElementMap[myKey];
-        }
         QMap<QString, QList<QVariantMap>> outElementDataMap;
         if (!queryElement["regex"].toString().isEmpty()) {
             for (QString elementPath: inElementMap.keys()) {
