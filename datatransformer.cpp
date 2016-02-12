@@ -128,7 +128,6 @@ void DataTransformer::escapeData()
                     str.replace("&", "&amp;");
                     str.replace("<", "&lt;");
                     str.replace(">", "&gt;");
-                    str.replace("\"", "&quot;");
                     datum[field] = str;
                 }
             }
