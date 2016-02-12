@@ -53,14 +53,14 @@ QString CsvExporter::toCsv()
     QString csv;
     QStringList formattedFields;
     for (QString field: m_fields) {
-        formattedFields << field.replace('\"', "\"\"");
+        formattedFields << "\"" + field.replace('\"', "\"\"") + "\"";
     }
     csv += formattedFields.join(',') + '\n';
     for (QVariant var: m_data) {
         QVariantMap datum = var.toMap();
         QStringList formattedValues;
         for (QString field: m_fields) {
-            formattedValues << datum[field].toString().replace('\"', "\"\"");
+            formattedValues << "\"" + datum[field].toString().replace('\"', "\"\"") + "\"";
         }
         csv += formattedValues.join(',') + '\n';
     }
