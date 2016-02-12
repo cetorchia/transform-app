@@ -59,7 +59,9 @@ Page {
                 var feedData = response.data;
                 nameTextField.text = feedData.name;
                 urlTextField.text = feedData.url;
-                treeModel.loadFromUrl(urlTextField.text);
+                if (urlTextField.text) {
+                    treeModel.loadFromUrl(urlTextField.text);
+                }
                 queryEditor.queryElementListModel.queryElements = feedData.query;
             }
         }
@@ -78,7 +80,9 @@ Page {
                 Layout.fillWidth: true
                 placeholderText: "URL (optional)"
                 onEditingFinished: {
-                    treeModel.loadFromUrl(urlTextField.text);
+                    if (urlTextField.text) {
+                        treeModel.loadFromUrl(urlTextField.text);
+                    }
                 }
             }
             Button {
